@@ -1,0 +1,124 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="3dp"
+    tools:context="com.philippefouquet.stationmeteo.ResumeFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:baselineAligned="false"
+        android:orientation="horizontal"
+        android:padding="4dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/black"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="IN"
+                android:textAlignment="center"
+                android:textSize="30sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:theme="@style/AppTheme.IconMesure"
+                    app:srcCompat="@drawable/ic_thermometer" />
+
+                <TextView
+                    android:id="@+id/textTemp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="12dp"
+                    android:text="23.34"
+                    android:theme="@style/AppTheme.TextMesure" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:theme="@style/AppTheme.IconMesure"
+                    app:srcCompat="@drawable/ic_hygrometer" />
+
+                <TextView
+                    android:id="@+id/textHum"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="23.34"
+                    android:theme="@style/AppTheme.TextMesure" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:theme="@style/AppTheme.IconMesure"
+                    app:srcCompat="@drawable/ic_pressure" />
+
+                <TextView
+                    android:id="@+id/textPres"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="23.34"
+                    android:theme="@style/AppTheme.TextMesure" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="3dp"
+            android:layout_weight="1"
+            android:background="@drawable/black"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OUT"
+                android:textAlignment="center"
+                android:textSize="30sp" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>
