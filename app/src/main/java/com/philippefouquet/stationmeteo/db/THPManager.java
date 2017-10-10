@@ -138,9 +138,10 @@ public class THPManager {
             a.setPressureMin(c.getDouble(c.getColumnIndex(KEY_PRESSURE+KEY_MIN)));
             a.setPressureMax(c.getDouble(c.getColumnIndex(KEY_PRESSURE+KEY_MAX)));
             c.close();
+            return a;
         }
 
-        return a;
+        return null;
     }
 
     public Cursor getTHP(int room) {

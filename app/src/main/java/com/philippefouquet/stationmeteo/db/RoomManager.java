@@ -85,9 +85,10 @@ public class RoomManager {
         if (c.moveToFirst()) {
             a.setName(c.getString(c.getColumnIndex(KEY_NAME)));
             c.close();
+            return a;
         }
 
-        return a;
+        return null;
     }
 
     public Cursor getTHP() {
