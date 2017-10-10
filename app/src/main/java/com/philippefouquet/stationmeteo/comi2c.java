@@ -3,8 +3,14 @@ package com.philippefouquet.stationmeteo;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
+import android.util.TimeUtils;
 
+import com.philippefouquet.stationmeteo.db.Room;
+import com.philippefouquet.stationmeteo.db.RoomManager;
+import com.philippefouquet.stationmeteo.db.THP;
+import com.philippefouquet.stationmeteo.db.THPManager;
 import com.philippefouquet.stationmeteo.jni.i2c;
 
 public class comi2c extends Service {
@@ -13,18 +19,21 @@ public class comi2c extends Service {
     final static String TEMP = "I2C_TEMP";
     final static String HUM = "I2C_HUM";
     final static String PRES = "I2C_PRES";
+    final static int ID_ROOM = 0;
     private int m_fd;
     private double m_temp;
     private double m_pres;
     private double m_hum;
     private Thread m_threadService = null;
 
+    private RoomManager roomManager;
+    private THPManager thpManager;
+
     public comi2c() {
         m_fd = i2c.init("/dev/i2c-0");
         if(m_fd < 0)
             Log.e(TAG, "Can't open /dev/i2c-0");
         init_f();
-        //super("comi2c");
     }
 
     double temperture_sht25(){
@@ -122,6 +131,12 @@ public class comi2c extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
+        roomManager = new RoomManager(this);
+        roomManager.open();
+        roomManager.addTHP(new Room(ID_ROOM, "in"));
+        thpManager = new THPManager(this);
+        thpManager.open();
+
         m_threadService = new Thread(){
             @Override
             public void run() {
@@ -129,6 +144,15 @@ public class comi2c extends Service {
                     m_temp = temperture_sht25();
                     m_hum = humidity_sht25();
                     m_pres = pressure_f();
+
+                    THP thp = new THP();
+                    thp.setRoom(ID_ROOM);
+                    thp.setDate(System.currentTimeMillis());
+                    thp.setHumidityMoy(m_hum);
+                    thp.setPressureMoy(m_pres);
+                    thp.setTemperatureMoy(m_temp);
+                    thpManager.addTHP(thp);
+
                     Intent intent = new Intent();
                     intent.setAction(ACTION_NEW_INTER_TEMP);
 
