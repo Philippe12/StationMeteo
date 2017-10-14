@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.TimeUtils;
 
@@ -13,17 +14,26 @@ import com.philippefouquet.stationmeteo.db.THP;
 import com.philippefouquet.stationmeteo.db.THPManager;
 import com.philippefouquet.stationmeteo.jni.i2c;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
+
 public class comi2c extends Service {
     final String TAG = "Comi2c";
-    final static String ACTION_NEW_INTER_TEMP = "ACTION_NEW_INTER_TEMP";
-    final static String TEMP = "I2C_TEMP";
-    final static String HUM = "I2C_HUM";
-    final static String PRES = "I2C_PRES";
+    public final static String ACTION_NEW_INTER_TEMP = "ACTION_NEW_INTER_TEMP";
+    public final static String TEMP = "I2C_TEMP";
+    public final static String HUM = "I2C_HUM";
+    public final static String PRES = "I2C_PRES";
     final static int ID_ROOM = 0;
     private int m_fd;
-    private double m_temp;
-    private double m_pres;
-    private double m_hum;
+    private List<Double> m_temp = new ArrayList<Double>();
+    private List<Double> m_pres = new ArrayList<Double>();
+    private List<Double> m_hum = new ArrayList<Double>();
+    private int lastHour = (new Date(System.currentTimeMillis())).getHours();
     private Thread m_threadService = null;
 
     private RoomManager roomManager;
@@ -128,6 +138,15 @@ public class comi2c extends Service {
         //double temp = buf[4]+((buf[5]>>4)/8.0);
     }
 
+    private double computeMoyen(List<Double> e){
+        double ret = 0;
+        if(e.size() == 0 ) return 0;
+        for( Double v: e ){
+            ret += v;
+        }
+        return ret / e.size();
+    }
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -143,24 +162,40 @@ public class comi2c extends Service {
             @Override
             public void run() {
                 while(true){
-                    m_temp = temperture_sht25();
-                    m_hum = humidity_sht25();
-                    m_pres = pressure_f();
+                    double t, h, p;
+                    t = temperture_sht25();
+                    h = humidity_sht25();
+                    p = pressure_f();
 
-                    THP thp = new THP();
-                    thp.setRoom(ID_ROOM);
-                    thp.setDate(System.currentTimeMillis());
-                    thp.setHumidityMoy(m_hum);
-                    thp.setPressureMoy(m_pres);
-                    thp.setTemperatureMoy(m_temp);
-                    thpManager.addTHP(thp);
+                    m_temp.add( t );
+                    m_hum.add( h );
+                    m_pres.add( p );
+
+                    if( lastHour != (new Date(System.currentTimeMillis())).getHours() ) {
+                        lastHour = (new Date(System.currentTimeMillis())).getHours();
+                        THP thp = new THP();
+                        thp.setRoom(ID_ROOM);
+                        thp.setDate(System.currentTimeMillis());
+                        thp.setHumidityMax(Collections.max( m_hum ));
+                        thp.setHumidityMin(Collections.min( m_hum ));
+                        thp.setHumidityMoy(computeMoyen( m_hum ));
+
+                        thp.setPressureMax(Collections.max( m_pres ));
+                        thp.setPressureMin(Collections.min( m_pres ));
+                        thp.setPressureMoy(computeMoyen( m_pres ));
+
+                        thp.setTemperatureMax(Collections.max( m_temp ));
+                        thp.setTemperatureMin(Collections.min( m_temp ));
+                        thp.setTemperatureMoy(computeMoyen( m_temp ));
+                        thpManager.add(thp);
+                    }
 
                     Intent intent = new Intent();
                     intent.setAction(ACTION_NEW_INTER_TEMP);
 
-                    intent.putExtra(TEMP, m_temp);
-                    intent.putExtra(HUM, m_hum);
-                    intent.putExtra(PRES, m_pres);
+                    intent.putExtra(TEMP, t);
+                    intent.putExtra(HUM, h);
+                    intent.putExtra(PRES, p);
 
                     sendBroadcast(intent);
                     try {
