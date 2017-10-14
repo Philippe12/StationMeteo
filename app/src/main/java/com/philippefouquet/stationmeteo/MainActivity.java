@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -26,6 +27,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+
+import com.philippefouquet.stationmeteo.db.Room;
+import com.philippefouquet.stationmeteo.db.RoomManager;
+import com.philippefouquet.stationmeteo.fragment.GraphicFragment;
+import com.philippefouquet.stationmeteo.fragment.ResumeFragment;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -92,6 +98,21 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        Menu gr = navigationView.getMenu().findItem(R.id.groupe_graph).getSubMenu();
+        gr.clear();
+        RoomManager roomManager = new RoomManager(this);
+        roomManager.open();
+        Cursor c = roomManager.get();
+        if (c.moveToFirst())
+        {
+            do {
+                int id = c.getInt(c.getColumnIndex(RoomManager.KEY_ID));
+                String name = c.getString(c.getColumnIndex(RoomManager.KEY_NAME));
+                gr.add(Menu.NONE, 1000+id, Menu.NONE, name);
+            }
+            while (c.moveToNext());
+        }
+        c.close(); // fermeture du curseur
 
         //run service
         Intent intent = new Intent(this, comi2c.class);
@@ -100,12 +121,13 @@ public class MainActivity extends AppCompatActivity
         mTimer.scheduleAtFixedRate(mTimerTask, 0, 1000);
 
         //display default view
-        openFrame(R.id.nav_camera);
+        openFrame(R.id.resume);
 
         //pwer on
         //PowerManager pm = (PowerManager)getSystemService(Activity.POWER_SERVICE);
         //PowerManager.WakeLock w1 = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, TAG);
         //w1.acquire();
+        setScreenState(1);
 
         //unlock screen
         //KeyguardManager kgManager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);
@@ -166,19 +188,12 @@ public class MainActivity extends AppCompatActivity
 
         // Handle navigation view item clicks here.
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.resume) {
             fragment = new ResumeFragment();
-            title  = "News";
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+            title  = "Général";
+        } else if (id >= 1000) {
+            fragment = GraphicFragment.newInstance(id-1000);
+            title = "Graphic";
         }
 
         if (fragment != null) {

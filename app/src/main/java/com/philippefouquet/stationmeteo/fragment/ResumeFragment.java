@@ -1,4 +1,4 @@
-package com.philippefouquet.stationmeteo;
+package com.philippefouquet.stationmeteo.fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -7,12 +7,11 @@ import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import com.philippefouquet.stationmeteo.*;
 
 public class ResumeFragment extends Fragment {
 
