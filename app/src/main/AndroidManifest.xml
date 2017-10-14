@@ -33,10 +33,6 @@
             </intent-filter>
         </activity>
 
-        <service
-            android:name=".Touche"
-            android:enabled="true"
-            android:exported="true"></service>
     </application>
 
 </manifest>
