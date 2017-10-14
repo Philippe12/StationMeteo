@@ -133,8 +133,8 @@ public class comi2c extends Service {
 
         roomManager = new RoomManager(this);
         roomManager.open();
-        if( roomManager.getTHP(ID_ROOM) == null ) {
-            roomManager.addTHP(new Room(ID_ROOM, "in"));
+        if( roomManager.get(ID_ROOM) == null ) {
+            roomManager.add(new Room(ID_ROOM, "in"));
         }
         thpManager = new THPManager(this);
         thpManager.open();

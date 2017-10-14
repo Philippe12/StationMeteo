@@ -60,7 +60,7 @@ public class THPManager {
         db.close();
     }
 
-    public long addTHP(THP thp) {
+    public long add(THP thp) {
         // Ajout d'un enregistrement dans la table
 
         ContentValues values = new ContentValues();
@@ -83,7 +83,7 @@ public class THPManager {
         return db.insert(TABLE_NAME,null,values);
     }
 
-    public int modTHP(THP thp) {
+    public int modify(THP thp) {
         // modification d'un enregistrement
         // valeur de retour : (int) nombre de lignes affectées par la requête
 
@@ -106,7 +106,7 @@ public class THPManager {
         return db.update(TABLE_NAME, values, where, whereArgs);
     }
 
-    public int supAnimal(THP thp) {
+    public int supress(THP thp) {
         // suppression d'un enregistrement
         // valeur de retour : (int) nombre de lignes affectées par la clause WHERE, 0 sinon
 
@@ -116,7 +116,7 @@ public class THPManager {
         return db.delete(TABLE_NAME, where, whereArgs);
     }
 
-    public THP getTHP(long date, int room) {
+    public THP get(long date, int room) {
         // Retourne l'animal dont l'id est passé en paramètre
 
         THP a=new THP();
@@ -144,7 +144,7 @@ public class THPManager {
         return null;
     }
 
-    public Cursor getTHP(int room) {
+    public Cursor get(int room) {
         // sélection de tous les enregistrements de la table
         return db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+KEY_ROOM+"="+room, null);
     }

@@ -41,7 +41,7 @@ public class RoomManager {
         db.close();
     }
 
-    public long addTHP(Room room) {
+    public long add(Room room) {
         // Ajout d'un enregistrement dans la table
 
         ContentValues values = new ContentValues();
@@ -52,7 +52,7 @@ public class RoomManager {
         return db.insert(TABLE_NAME,null,values);
     }
 
-    public int modTHP(Room room) {
+    public int modify(Room room) {
         // modification d'un enregistrement
         // valeur de retour : (int) nombre de lignes affectées par la requête
 
@@ -65,7 +65,7 @@ public class RoomManager {
         return db.update(TABLE_NAME, values, where, whereArgs);
     }
 
-    public int supAnimal(Room room) {
+    public int supress(Room room) {
         // suppression d'un enregistrement
         // valeur de retour : (int) nombre de lignes affectées par la clause WHERE, 0 sinon
 
@@ -75,7 +75,7 @@ public class RoomManager {
         return db.delete(TABLE_NAME, where, whereArgs);
     }
 
-    public Room getTHP(int id) {
+    public Room get(int id) {
         // Retourne l'animal dont l'id est passé en paramètre
 
         Room a=new Room();
@@ -91,7 +91,7 @@ public class RoomManager {
         return null;
     }
 
-    public Cursor getTHP() {
+    public Cursor get() {
         // sélection de tous les enregistrements de la table
         return db.rawQuery("SELECT * FROM "+TABLE_NAME, null);
     }
