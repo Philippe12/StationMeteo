@@ -3,26 +3,48 @@ package com.philippefouquet.stationmeteo.db;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Build;
 
 /**
  * Created by philippefouquet on 08/10/2017.
  */
 
 public class MySQLite extends SQLiteOpenHelper {
-    private static final String DATABASE_NAME = "/esa/db.sqlite";
+    private static final String DATABASE_NAME_ESA = "/esa/db.sqlite";
+    private static final String DATABASE_NAME_QEMU = "/storage/sdcard/db.sqlite";
     private static final int DATABASE_VERSION = 1;
     private static MySQLite sInstance;
 
     public static synchronized MySQLite getInstance(Context context) {
         if (sInstance == null) {
-            sInstance = new MySQLite(context);
+            sInstance = new MySQLite(context, getDbName());
         }
         return sInstance;
     }
 
-    private MySQLite(Context context) {
 
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+    private static boolean isGenymotionEmulator(String buildManufacturer) {
+        return buildManufacturer != null &&
+                (buildManufacturer.contains("Genymotion") || buildManufacturer.equals("unknown"));
+    }
+
+    private static boolean buildModelContainsEmulatorHints(String buildModel) {
+        return buildModel.startsWith("sdk")
+                || "google_sdk".equals(buildModel)
+                || buildModel.contains("Emulator")
+                || buildModel.contains("Android SDK");
+    }
+
+    public static String getDbName(){
+        String db = DATABASE_NAME_ESA;
+        if( isGenymotionEmulator(Build.MANUFACTURER) || buildModelContainsEmulatorHints(Build.MODEL) )
+            db = DATABASE_NAME_QEMU;
+        return db;
+    }
+
+    private MySQLite(Context context, String db) {
+
+        super(context, db, null, DATABASE_VERSION);
     }
 
     @Override
