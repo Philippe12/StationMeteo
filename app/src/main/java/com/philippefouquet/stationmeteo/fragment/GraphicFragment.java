@@ -86,18 +86,22 @@ public class GraphicFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle sevedInstanceState){
         GraphView graph = (GraphView) getView().findViewById(R.id.graph);
-        List<DataPoint> data_p = new ArrayList<>();
+        List<DataPoint> data_moy = new ArrayList<>();
+        List<DataPoint> data_max = new ArrayList<>();
+        List<DataPoint> data_min = new ArrayList<>();
         thpManager.open();
         Cursor c = thpManager.get(roomId);
         long min = -1, max = -1;
         if (c.moveToFirst())
         {
             do {
-                double temp = c.getDouble(c.getColumnIndex(THPManager.KEY_TEMPERATURE+THPManager.KEY_MOY));
+                double temp_moy = c.getDouble(c.getColumnIndex(THPManager.KEY_TEMPERATURE+THPManager.KEY_MOY));
+                double temp_min = c.getDouble(c.getColumnIndex(THPManager.KEY_TEMPERATURE+THPManager.KEY_MIN));
+                double temp_max = c.getDouble(c.getColumnIndex(THPManager.KEY_TEMPERATURE+THPManager.KEY_MAX));
                 long date = c.getLong(c.getColumnIndex(THPManager.KEY_DATE));
-                Date dt = new Date(date);
-                //series.appendData(new DataPoint(date, temp), true, 1);
-                data_p.add(new DataPoint(date, temp));
+                data_moy.add(new DataPoint(date, temp_moy));
+                data_min.add(new DataPoint(date, temp_min));
+                data_max.add(new DataPoint(date, temp_max));
                 if((min == -1) || (date < min)) min = date;
                 if((max == -1) || (date > max)) max = date;
             }
@@ -114,11 +118,27 @@ public class GraphicFragment extends Fragment {
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);
 
-        DataPoint[] tmp = new DataPoint[data_p.size()];
-        tmp = data_p.toArray(tmp);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(tmp);
+        DataPoint[] tmp = new DataPoint[data_moy.size()];
+        tmp = data_moy.toArray(tmp);
+        LineGraphSeries<DataPoint> series_moy = new LineGraphSeries<>(tmp);
+        series_moy.setThickness(2);
+        series_moy.setColor(Color.rgb(36,36,36));
 
-        graph.addSeries(series);
+        tmp = new DataPoint[data_min.size()];
+        tmp = data_min.toArray(tmp);
+        LineGraphSeries<DataPoint> series_min = new LineGraphSeries<>(tmp);
+        series_min.setThickness(2);
+        series_min.setColor(Color.rgb(0,0,220));
+
+        tmp = new DataPoint[data_moy.size()];
+        tmp = data_max.toArray(tmp);
+        LineGraphSeries<DataPoint> series_max = new LineGraphSeries<>(tmp);
+        series_max.setThickness(2);
+        series_max.setColor(Color.rgb(220,0,0));
+
+        graph.addSeries(series_moy);
+        graph.addSeries(series_min);
+        graph.addSeries(series_max);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
