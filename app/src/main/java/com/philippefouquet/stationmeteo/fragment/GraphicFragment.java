@@ -2,6 +2,7 @@ package com.philippefouquet.stationmeteo.fragment;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -19,7 +20,13 @@ import com.philippefouquet.stationmeteo.db.RoomManager;
 import com.philippefouquet.stationmeteo.db.THPManager;
 
 import java.security.Timestamp;
+import java.text.DateFormat;
+import java.text.FieldPosition;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -79,30 +86,39 @@ public class GraphicFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle sevedInstanceState){
         GraphView graph = (GraphView) getView().findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>();
+        List<DataPoint> data_p = new ArrayList<>();
         thpManager.open();
         Cursor c = thpManager.get(roomId);
-        int min = -1, max = -1;
+        long min = -1, max = -1;
         if (c.moveToFirst())
         {
             do {
                 double temp = c.getDouble(c.getColumnIndex(THPManager.KEY_TEMPERATURE+THPManager.KEY_MOY));
-                int date = c.getInt(c.getColumnIndex(THPManager.KEY_DATE));
+                long date = c.getLong(c.getColumnIndex(THPManager.KEY_DATE));
                 Date dt = new Date(date);
-                series.appendData(new DataPoint(dt, temp), true, 1);
+                //series.appendData(new DataPoint(date, temp), true, 1);
+                data_p.add(new DataPoint(date, temp));
                 if((min == -1) || (date < min)) min = date;
                 if((max == -1) || (date > max)) max = date;
             }
             while (c.moveToNext());
         }
         c.close(); // fermeture du curseur
-        graph.addSeries(series);
-        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity()));
+        DateFormat dt_form = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity(), dt_form));
         // set manual x bounds to have nice steps
         graph.getViewport().setMinX((new Date(min)).getTime());
         graph.getViewport().setMaxX((new Date(max)).getTime());
         graph.getViewport().setXAxisBoundsManual(true);
+        // enable scaling and scrolling
+        graph.getViewport().setScalable(true);
+        graph.getViewport().setScalableY(true);
 
+        DataPoint[] tmp = new DataPoint[data_p.size()];
+        tmp = data_p.toArray(tmp);
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(tmp);
+
+        graph.addSeries(series);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
