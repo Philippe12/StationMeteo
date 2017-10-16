@@ -28,6 +28,8 @@ public class comi2c extends Service {
     public final static String TEMP = "I2C_TEMP";
     public final static String HUM = "I2C_HUM";
     public final static String PRES = "I2C_PRES";
+    public final static String STATUS = "I2C_STATUS";
+
     final static int ID_ROOM = 0;
     private int m_fd;
     private List<Double> m_temp = new ArrayList<Double>();
@@ -39,6 +41,13 @@ public class comi2c extends Service {
     private RoomManager roomManager;
     private THPManager thpManager;
 
+    private boolean status;
+
+    private double randomValue(double dc, double noise){
+        status = false;
+        return dc + ((Math.random()-0.5)*noise);
+    }
+
     public comi2c() {
         m_fd = i2c.init("/dev/i2c-0");
         if(m_fd < 0)
@@ -46,48 +55,48 @@ public class comi2c extends Service {
         init_f();
     }
 
-    double temperture_sht25(){
+    private double temperture_sht25(){
         int[] buf = new int[10];
         if( m_fd < 0 ){
-            return Math.random();
+            return randomValue(20, 2);
         }
         if(i2c.open(m_fd, 0x40) < 0)
-            return 0;
+            return randomValue(20, 2);
         buf[0] = 0xF3;
         if( i2c.write(m_fd, buf, 1) < 0 )
-            return 0;
+            return randomValue(20, 2);
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         if( i2c.read(m_fd, buf, 3) < 0 )
-            return 0;
+            return randomValue(20, 2);
         return (-46.85 + 175.72 * ((buf[1] + (buf[0] << 8)) / 65536.0));
 
     }
 
-    double humidity_sht25(){
+    private double humidity_sht25(){
         int[] buf = new int[10];
         if( m_fd < 0 ){
-            return Math.random();
+            return randomValue(60, 5);
         }
         if(i2c.open(m_fd, 0x40) < 0)
-            return 0;
+            return randomValue(60, 5);
         buf[0] = 0xF5;
         if( i2c.write(m_fd, buf, 1) < 0 )
-            return 0;
+            return randomValue(60, 5);
         try {
             Thread.sleep(50);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         if( i2c.read(m_fd, buf, 3) < 0 )
-            return 0;
+            return randomValue(60, 5);
         return (-6.0 + 125.0 * ((buf[1] + (buf[0] << 8)) / 65536.0));
     }
 
-    void init_f(){
+    private void init_f(){
         int[] buf = new int[10];
         if( m_fd < 0 ){
             return;
@@ -119,19 +128,19 @@ public class comi2c extends Service {
         }while((buf[0]&0x08)!=0x08);*/
     }
 
-    double pressure_f(){
+    private double pressure_f(){
         int[] buf = new int[10];
         if( m_fd < 0 ){
-            return Math.random();
+            return randomValue(1010, 5);
         }
         if( i2c.open(m_fd, 0x60) < 0 )
-            return 0;
+            return randomValue(1010, 5);
 
         buf[0] = 0x00;
         if(i2c.write(m_fd, buf, 1) < 0)
-            return 0;
+            return randomValue(1010, 5);
         if(i2c.read(m_fd, buf, 7) < 0)
-            return 0;
+            return randomValue(1010, 5);
         double val = (buf[1]<<10)+(buf[2]<<2)+((buf[3]&0xC0)>>5)+(((buf[3]&0x30)>>4)/8.0);
         return (val/100.0);
 
@@ -163,6 +172,7 @@ public class comi2c extends Service {
             public void run() {
                 while(true){
                     double t, h, p;
+                    status = true;
                     t = temperture_sht25();
                     h = humidity_sht25();
                     p = pressure_f();
@@ -196,6 +206,7 @@ public class comi2c extends Service {
                     intent.putExtra(TEMP, t);
                     intent.putExtra(HUM, h);
                     intent.putExtra(PRES, p);
+                    intent.putExtra(STATUS, status);
 
                     sendBroadcast(intent);
                     try {

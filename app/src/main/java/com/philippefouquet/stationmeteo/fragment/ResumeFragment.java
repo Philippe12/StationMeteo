@@ -28,11 +28,12 @@ public class ResumeFragment extends Fragment {
             double t = intent.getDoubleExtra(comi2c.TEMP,0);
             double h = intent.getDoubleExtra(comi2c.HUM,0);
             double p = intent.getDoubleExtra(comi2c.PRES,0);
-            setDatathp(t,h,p);
+            boolean s = intent.getBooleanExtra(comi2c.STATUS, false);
+            setDatathp(t,h,p,s);
         }
     };
 
-    public void setDatathp(double t, double h, double p){
+    public void setDatathp(double t, double h, double p, boolean s){
         StringBuilder builder = new StringBuilder();
         TextView txt;
         txt= (TextView)getView().findViewById(R.id.textTemp);
@@ -41,6 +42,12 @@ public class ResumeFragment extends Fragment {
         txt.setText(String.format("%.2f", h));
         txt= (TextView)getView().findViewById(R.id.textPres);
         txt.setText(String.format("%.2f", p));
+        txt= (TextView)getView().findViewById(R.id.textTitle);
+        if(s){
+            txt.setText("Intérieur");
+        } else {
+            txt.setText("Intérieur (sinul.)");
+        }
     }
 
     @Override
