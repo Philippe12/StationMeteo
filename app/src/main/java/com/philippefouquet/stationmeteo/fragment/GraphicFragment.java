@@ -108,12 +108,15 @@ public class GraphicFragment extends Fragment {
             while (c.moveToNext());
         }
         c.close(); // fermeture du curseur
+
         DateFormat dt_form = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity(), dt_form));
+
         // set manual x bounds to have nice steps
         graph.getViewport().setMinX((new Date(min)).getTime());
         graph.getViewport().setMaxX((new Date(max)).getTime());
         graph.getViewport().setXAxisBoundsManual(true);
+
         // enable scaling and scrolling
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);
