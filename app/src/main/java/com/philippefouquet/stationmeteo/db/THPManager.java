@@ -148,4 +148,9 @@ public class THPManager {
         // sélection de tous les enregistrements de la table
         return db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+KEY_ROOM+"="+room, null);
     }
+
+    public Cursor getfrom(int room, long from) {
+        // sélection de tous les enregistrements de la table
+        return db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+KEY_ROOM+"="+room+" AND "+KEY_DATE+ ">"+from, null);
+    }
 }
