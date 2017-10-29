@@ -25,6 +25,7 @@ import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -90,7 +91,7 @@ public class GraphicFragment extends Fragment {
         List<DataPoint> data_max = new ArrayList<>();
         List<DataPoint> data_min = new ArrayList<>();
         thpManager.open();
-        Cursor c = thpManager.get(roomId);
+        Cursor c = thpManager.getfrom(roomId, System.currentTimeMillis()-(2*24*60*60*1000));
         long min = -1, max = -1;
         if (c.moveToFirst())
         {
@@ -109,12 +110,15 @@ public class GraphicFragment extends Fragment {
         }
         c.close(); // fermeture du curseur
 
-        DateFormat dt_form = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        //DateFormat dt_form = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        DateFormat dt_form = new SimpleDateFormat("HH:mm");
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity(), dt_form));
 
         // set manual x bounds to have nice steps
-        graph.getViewport().setMinX((new Date(min)).getTime());
-        graph.getViewport().setMaxX((new Date(max)).getTime());
+        //graph.getViewport().setMinX((new Date(min)).getTime());
+        //graph.getViewport().setMaxX((new Date(max)).getTime());
+        graph.getViewport().setMinX((new Date(System.currentTimeMillis()-(2*24*60*60*1000))).getTime());
+        graph.getViewport().setMaxX((new Date(System.currentTimeMillis())).getTime());
         graph.getViewport().setXAxisBoundsManual(true);
 
         // enable scaling and scrolling
