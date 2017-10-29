@@ -4,6 +4,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Build;
+import android.util.Log;
 
 /**
  * Created by philippefouquet on 08/10/2017.
@@ -11,7 +12,7 @@ import android.os.Build;
 
 public class MySQLite extends SQLiteOpenHelper {
     private static final String DATABASE_NAME_ESA = "/esa/db.sqlite";
-    private static final String DATABASE_NAME_QEMU = "/storage/sdcard/db.sqlite";
+    private static final String DATABASE_NAME_QEMU = "db.sqlite";
     private static final int DATABASE_VERSION = 1;
     private static MySQLite sInstance;
 
