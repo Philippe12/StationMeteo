@@ -136,6 +136,21 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        mTimer.cancel();
+        mTimer.purge();
+        setScreenState(1);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //mTimer.cancel();
+        //mTimer.scheduleAtFixedRate(mTimerTask, 0, 1000);
+    }
+
+    @Override
     public boolean dispatchTouchEvent(MotionEvent event){
         if(mCpt > (MAX_SCREEN_TIME-1) ){
             setScreenState(1);
