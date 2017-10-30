@@ -198,6 +198,10 @@ public class comi2c extends Service {
                         thp.setTemperatureMin(Collections.min( m_temp ));
                         thp.setTemperatureMoy(computeMoyen( m_temp ));
                         thpManager.add(thp);
+
+                        m_temp.clear();
+                        m_hum.clear();
+                        m_pres.clear();
                     }
 
                     Intent intent = new Intent();
