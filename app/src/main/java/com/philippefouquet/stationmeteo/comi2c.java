@@ -207,6 +207,7 @@ public class comi2c extends Service {
                     intent.putExtra(HUM, h);
                     intent.putExtra(PRES, p);
                     intent.putExtra(STATUS, status);
+                    Log.i(TAG, "New measure");
 
                     sendBroadcast(intent);
                     try {
