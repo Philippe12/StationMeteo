@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity
     final static String TAG="Meteo";
     private int mCpt = 0;
 
-    private TimerTask mTimerTask = new TimerTask(){
+     private class MyTimerTask extends TimerTask{
         @Override
         public void run(){
             if( mCpt < (MAX_SCREEN_TIME-1)) {
@@ -59,18 +59,22 @@ public class MainActivity extends AppCompatActivity
         }
     };
 
-    private Timer mTimer = new Timer("TimerScreen", true);
+    private MyTimerTask mTimerTask = null;//new MyTimerTask();
+
+    private Timer mTimer = null;//new Timer("TimerScreen", true);;
 
     private void setScreenState(int state){
         File f;
         FileOutputStream out;
+        Log.i(TAG, "Screen is set "+ (state==1?"ON":"OFF"));
+
         try {
             f = new File("/dev/esaio/alim_screen/value");
             out = new FileOutputStream(f);
             out.write(String.valueOf(state).getBytes());
             out.close();
         } catch (Exception e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 
@@ -118,8 +122,6 @@ public class MainActivity extends AppCompatActivity
         Intent intent = new Intent(this, comi2c.class);
         startService(intent);
 
-        mTimer.scheduleAtFixedRate(mTimerTask, 0, 1000);
-
         //display default view
         openFrame(R.id.resume);
 
@@ -135,19 +137,29 @@ public class MainActivity extends AppCompatActivity
         //kLock.disableKeyguard();
     }
 
+    private void stopTimerScreen(){
+        mTimer.cancel();
+        mTimer.purge();
+        mTimer = null;
+        mTimerTask = null;
+    }
+
     @Override
     public void onPause() {
         super.onPause();
-        mTimer.cancel();
-        mTimer.purge();
+        stopTimerScreen();
         setScreenState(1);
+        Log.i(TAG, "App is paused");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        //mTimer.cancel();
-        //mTimer.scheduleAtFixedRate(mTimerTask, 0, 1000);
+        mTimerTask = new MyTimerTask();
+        mTimer = new Timer("TimerScreen", true);;
+
+        mTimer.scheduleAtFixedRate(mTimerTask, 0, 1000);
+        Log.i(TAG, "App is resumed");
     }
 
     @Override
