@@ -112,7 +112,8 @@ public class MainActivity extends AppCompatActivity
             do {
                 int id = c.getInt(c.getColumnIndex(RoomManager.KEY_ID));
                 String name = c.getString(c.getColumnIndex(RoomManager.KEY_NAME));
-                gr.add(Menu.NONE, 1000+id, Menu.NONE, name);
+                MenuItem it = gr.add(Menu.NONE, 1000+id, Menu.NONE, name);
+                it.setCheckable(true);
             }
             while (c.moveToNext());
         }

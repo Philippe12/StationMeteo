@@ -5,7 +5,8 @@
         <item
             android:id="@+id/resume"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Résumé" />
+            android:title="Résumé"
+            android:checked="true"/>
     </group>
 
     <item
