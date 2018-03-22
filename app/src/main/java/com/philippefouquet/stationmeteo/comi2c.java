@@ -176,8 +176,11 @@ public class comi2c extends Service {
                     m_hum.add( h );
                     m_pres.add( p );
 
-                    if( lastHour != (new Date(System.currentTimeMillis())).getHours() ) {
-                        lastHour = (new Date(System.currentTimeMillis())).getHours();
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(new Date(System.currentTimeMillis()));
+                    int hours = calendar.get(Calendar.HOUR);
+                    if( lastHour != hours ) {
+                        lastHour = hours;
                         THP thp = new THP();
                         thp.setRoom(ID_ROOM);
                         thp.setDate(System.currentTimeMillis());
