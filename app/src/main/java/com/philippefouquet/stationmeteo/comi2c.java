@@ -3,24 +3,19 @@ package com.philippefouquet.stationmeteo;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
 import android.util.Log;
-import android.util.TimeUtils;
 
-import com.philippefouquet.stationmeteo.db.Room;
-import com.philippefouquet.stationmeteo.db.RoomManager;
-import com.philippefouquet.stationmeteo.db.THP;
-import com.philippefouquet.stationmeteo.db.THPManager;
-import com.philippefouquet.stationmeteo.jni.i2c;
+import com.philippefouquet.stationmeteo.Db.Room;
+import com.philippefouquet.stationmeteo.Db.RoomManager;
+import com.philippefouquet.stationmeteo.Db.THP;
+import com.philippefouquet.stationmeteo.Db.THPManager;
+import com.philippefouquet.stationmeteo.Jni.i2c;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 
 public class comi2c extends Service {
     final String TAG = "Comi2c";

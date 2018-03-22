@@ -7,7 +7,7 @@
 #include <linux/i2c-dev.h>
 #include "i2c_native.h"
 
-JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_init(JNIEnv *env, jobject obj,
+JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_init(JNIEnv *env, jobject obj,
                                                           jstring file) {
 
     int fd;
@@ -30,13 +30,13 @@ JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_init(JNIEnv
 
     return fd;
 }
-JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_close(JNIEnv *env, jobject obj,
+JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_close(JNIEnv *env, jobject obj,
                                                            jint fd) {
     if (close(fd) < 0)
         return errno;
     return 0;
 }
-JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_open(JNIEnv *env, jobject obj,
+JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_open(JNIEnv *env, jobject obj,
                                                           jint fd, jint address) {
 
     if (ioctl(fd, I2C_SLAVE, address) < 0)
@@ -44,7 +44,7 @@ JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_open(JNIEnv
 
     return 0;
 }
-JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_write(JNIEnv *env, jobject obj,
+JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_write(JNIEnv *env, jobject obj,
                                                            jint fd, jintArray buffer, jint len) {
 
     jboolean isCopy;
@@ -59,7 +59,7 @@ JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_write(JNIEn
 
     return 0;
 }
-JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_read(JNIEnv *env, jobject obj,
+JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_read(JNIEnv *env, jobject obj,
                                                           jint fd, jintArray buffer, jint len) {
 
     unsigned char BufByte[len];

@@ -1,23 +1,12 @@
 package com.philippefouquet.stationmeteo;
 
-import android.app.Activity;
-import android.app.KeyguardManager;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.os.PowerManager;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -26,15 +15,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
 
-import com.philippefouquet.stationmeteo.db.Room;
-import com.philippefouquet.stationmeteo.db.RoomManager;
-import com.philippefouquet.stationmeteo.fragment.GraphicFragment;
-import com.philippefouquet.stationmeteo.fragment.ResumeFragment;
+import com.philippefouquet.stationmeteo.Db.RoomManager;
+import com.philippefouquet.stationmeteo.Fragment.GraphicFragment;
+import com.philippefouquet.stationmeteo.Fragment.ResumeFragment;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.Timer;
 import java.util.TimerTask;

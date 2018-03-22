@@ -1,4 +1,4 @@
-package com.philippefouquet.stationmeteo.db;
+package com.philippefouquet.stationmeteo.Db;
 
 /**
  * Created by philippefouquet on 07/10/2017.
@@ -152,5 +152,10 @@ public class THPManager {
     public Cursor getfrom(int room, long from) {
         // sélection de tous les enregistrements de la table
         return db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+KEY_ROOM+"="+room+" AND "+KEY_DATE+ ">"+from, null);
+    }
+
+    public Cursor getwindow(int room, long from, long to) {
+        // sélection de tous les enregistrements de la table
+        return db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+KEY_ROOM+"="+room+" AND "+KEY_DATE+ ">"+from+" AND "+KEY_DATE+"<"+to, null);
     }
 }

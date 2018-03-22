@@ -1,4 +1,4 @@
-package com.philippefouquet.stationmeteo.db;
+package com.philippefouquet.stationmeteo.Db;
 
 /**
  * Created by philippefouquet on 10/10/2017.

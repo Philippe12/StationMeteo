@@ -1,4 +1,4 @@
-package com.philippefouquet.stationmeteo.jni;
+package com.philippefouquet.stationmeteo.Jni;
 
 /**
  * Created by philippefouquet on 20/09/2017.

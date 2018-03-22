@@ -20,11 +20,11 @@
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR, "I2C", __VA_ARGS__)
 
 extern "C" {
-    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_init(JNIEnv *, jobject, jstring);
-    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_close(JNIEnv *, jobject, jint);
-    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_open(JNIEnv *, jobject, jint, jint);
-    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_write(JNIEnv *, jobject, jint, jintArray, jint);
-    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_jni_i2c_read(JNIEnv *, jobject, jint, jintArray, jint);
+    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_init(JNIEnv *, jobject, jstring);
+    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_close(JNIEnv *, jobject, jint);
+    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_open(JNIEnv *, jobject, jint, jint);
+    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_write(JNIEnv *, jobject, jint, jintArray, jint);
+    JNIEXPORT jint JNICALL Java_com_philippefouquet_stationmeteo_Jni_i2c_read(JNIEnv *, jobject, jint, jintArray, jint);
 };
 
 #endif //STATIONMETEO_I2C_NATIVE_H

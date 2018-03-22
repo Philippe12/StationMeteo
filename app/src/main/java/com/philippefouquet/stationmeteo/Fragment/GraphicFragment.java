@@ -1,33 +1,36 @@
-package com.philippefouquet.stationmeteo.fragment;
+package com.philippefouquet.stationmeteo.Fragment;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
+import com.philippefouquet.stationmeteo.Interface.PikerDate;
 import com.philippefouquet.stationmeteo.R;
-import com.philippefouquet.stationmeteo.db.RoomManager;
-import com.philippefouquet.stationmeteo.db.THPManager;
+import com.philippefouquet.stationmeteo.Db.THPManager;
 
-import java.security.Timestamp;
+import java.sql.Time;
 import java.text.DateFormat;
-import java.text.FieldPosition;
-import java.text.ParsePosition;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -47,7 +50,10 @@ public class GraphicFragment extends Fragment {
 
     private THPManager thpManager = new THPManager(getContext());
 
-    private OnFragmentInteractionListener mListener;
+    private ResumeFragment.OnFragmentInteractionListener mListener;
+
+    private PikerDate DateStartPiker;
+    private PikerDate DateEndPiker;
 
     public GraphicFragment() {
         // Required empty public constructor
@@ -86,12 +92,34 @@ public class GraphicFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle sevedInstanceState){
+        EditText edittext= (EditText) getView().findViewById(R.id.editDateStart);
+        DateStartPiker = new PikerDate(edittext, getContext());
+        edittext= (EditText) getView().findViewById(R.id.editDateEnd);
+        DateEndPiker = new PikerDate(edittext, getContext());
+
+        DateStartPiker.setDate(new Date(System.currentTimeMillis()-(2*24*60*60*1000)));
+        DateEndPiker.setDate(new Date(System.currentTimeMillis()));
+
+        final AppCompatImageButton button = (AppCompatImageButton)getView().findViewById(R.id.imageButton_setdate);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                load();
+            }
+        });
+
+        load();
+    }
+
+    private void load(){
         GraphView graph = (GraphView) getView().findViewById(R.id.graph);
         List<DataPoint> data_moy = new ArrayList<>();
         List<DataPoint> data_max = new ArrayList<>();
         List<DataPoint> data_min = new ArrayList<>();
         thpManager.open();
-        Cursor c = thpManager.getfrom(roomId, System.currentTimeMillis()-(2*24*60*60*1000));
+
+        Cursor c = thpManager.getwindow(roomId,
+                DateStartPiker.getDate().getTime(),
+                DateEndPiker.getNextDay().getTime());
         long min = -1, max = -1;
         if (c.moveToFirst())
         {
@@ -110,15 +138,15 @@ public class GraphicFragment extends Fragment {
         }
         c.close(); // fermeture du curseur
 
-        //DateFormat dt_form = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-        DateFormat dt_form = new SimpleDateFormat("HH:mm");
+        DateFormat dt_form = new SimpleDateFormat("dd/MM/yyyy\nHH:mm");
+        //DateFormat dt_form = new SimpleDateFormat("HH:mm");
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(getActivity(), dt_form));
 
         // set manual x bounds to have nice steps
         //graph.getViewport().setMinX((new Date(min)).getTime());
         //graph.getViewport().setMaxX((new Date(max)).getTime());
-        graph.getViewport().setMinX((new Date(System.currentTimeMillis()-(2*24*60*60*1000))).getTime());
-        graph.getViewport().setMaxX((new Date(System.currentTimeMillis())).getTime());
+        graph.getViewport().setMinX(DateStartPiker.getDate().getTime());
+        graph.getViewport().setMaxX(DateEndPiker.getNextDay().getTime());
         graph.getViewport().setXAxisBoundsManual(true);
 
         // enable scaling and scrolling

@@ -1,4 +1,4 @@
-package com.philippefouquet.stationmeteo.db;
+package com.philippefouquet.stationmeteo.Db;
 
 import android.content.ContentValues;
 import android.content.Context;

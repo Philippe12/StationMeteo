@@ -1,4 +1,4 @@
-package com.philippefouquet.stationmeteo.fragment;
+package com.philippefouquet.stationmeteo.Fragment;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

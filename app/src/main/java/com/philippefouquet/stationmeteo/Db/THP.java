@@ -1,7 +1,7 @@
 /**
  * Created by philippefouquet on 07/10/2017.
  */
-package com.philippefouquet.stationmeteo.db;
+package com.philippefouquet.stationmeteo.Db;
 
 public class THP {
     private long date;
