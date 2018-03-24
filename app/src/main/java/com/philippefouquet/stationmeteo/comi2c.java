@@ -30,7 +30,7 @@ public class comi2c extends Service {
     private List<Double> m_temp = new ArrayList<Double>();
     private List<Double> m_pres = new ArrayList<Double>();
     private List<Double> m_hum = new ArrayList<Double>();
-    private int lastHour = (new Date(System.currentTimeMillis())).getHours();
+    private int lastHour = 0;
     private Thread m_threadService = null;
 
     private RoomManager roomManager;
@@ -44,6 +44,10 @@ public class comi2c extends Service {
     }
 
     public comi2c() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date(System.currentTimeMillis()));
+        lastHour = calendar.get(Calendar.HOUR);
+
         m_fd = i2c.init("/dev/i2c-0");
         if(m_fd < 0)
             Log.e(TAG, "Can't open /dev/i2c-0");
