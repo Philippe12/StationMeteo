@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TabHost;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
@@ -103,15 +104,38 @@ public class GraphicFragment extends Fragment {
         final AppCompatImageButton button = (AppCompatImageButton)getView().findViewById(R.id.imageButton_setdate);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                load();
+                load((GraphView) getView().findViewById(R.id.graphTemp),THPManager.KEY_TEMPERATURE);
+                load((GraphView) getView().findViewById(R.id.graphHum), THPManager.KEY_HUMIDITY);
+                load((GraphView) getView().findViewById(R.id.graphPres), THPManager.KEY_PRESSURE);
             }
         });
 
-        load();
+        TabHost host = (TabHost)getView().findViewById(R.id.tabHost);
+        host.setup();
+
+        //Tab 1
+        TabHost.TabSpec spec = host.newTabSpec(getResources().getString(R.string.temp));
+        spec.setContent(R.id.tab1);
+        spec.setIndicator(getResources().getString(R.string.temp));
+        host.addTab(spec);
+        load((GraphView) getView().findViewById(R.id.graphTemp), THPManager.KEY_TEMPERATURE);
+
+        //Tab 2
+        spec = host.newTabSpec(getResources().getString(R.string.hum));
+        spec.setContent(R.id.tab2);
+        spec.setIndicator(getResources().getString(R.string.hum));
+        host.addTab(spec);
+        load((GraphView) getView().findViewById(R.id.graphHum), THPManager.KEY_HUMIDITY);
+
+        //Tab 3
+        spec = host.newTabSpec(getResources().getString(R.string.pres));
+        spec.setContent(R.id.tab3);
+        spec.setIndicator(getResources().getString(R.string.pres));
+        host.addTab(spec);
+        load((GraphView) getView().findViewById(R.id.graphPres),THPManager.KEY_PRESSURE);
     }
 
-    private void load(){
-        GraphView graph = (GraphView) getView().findViewById(R.id.graph);
+    private void load(GraphView graph, String key){
         List<DataPoint> data_moy = new ArrayList<>();
         List<DataPoint> data_max = new ArrayList<>();
         List<DataPoint> data_min = new ArrayList<>();
@@ -124,9 +148,9 @@ public class GraphicFragment extends Fragment {
         if (c.moveToFirst())
         {
             do {
-                double temp_moy = c.getDouble(c.getColumnIndex(THPManager.KEY_TEMPERATURE+THPManager.KEY_MOY));
-                double temp_min = c.getDouble(c.getColumnIndex(THPManager.KEY_TEMPERATURE+THPManager.KEY_MIN));
-                double temp_max = c.getDouble(c.getColumnIndex(THPManager.KEY_TEMPERATURE+THPManager.KEY_MAX));
+                double temp_moy = c.getDouble(c.getColumnIndex(key+THPManager.KEY_MOY));
+                double temp_min = c.getDouble(c.getColumnIndex(key+THPManager.KEY_MIN));
+                double temp_max = c.getDouble(c.getColumnIndex(key+THPManager.KEY_MAX));
                 long date = c.getLong(c.getColumnIndex(THPManager.KEY_DATE));
                 data_moy.add(new DataPoint(date, temp_moy));
                 data_min.add(new DataPoint(date, temp_min));
