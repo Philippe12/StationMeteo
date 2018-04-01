@@ -33,7 +33,7 @@ android {
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation 'com.android.support:appcompat-v7:26.1.0'
@@ -42,8 +42,10 @@ dependencies {
     implementation 'com.android.support:design:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     implementation 'com.jjoe64:graphview:4.2.1'
-    testCompile 'junit:junit:4.12'
-    //implementation 'io.moquette:moquette-netty-parser:0.9'
-    //implementation 'io.moquette:moquette-broker:0.10'
-    //implementation 'io.moquette:moquette-parser-commons:0.8.1'
+    testImplementation 'junit:junit:4.12'
+    implementation 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+    implementation ('org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'){
+        //exclude module: "org.eclipse.paho.client.mqttv3"
+        transitive=true
+    }
 }
