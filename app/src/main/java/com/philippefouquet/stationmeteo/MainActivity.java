@@ -108,6 +108,8 @@ public class MainActivity extends AppCompatActivity
         //run service
         Intent intent = new Intent(this, comi2c.class);
         startService(intent);
+        intent = new Intent(this, MQTTBroker.class);
+        startService(intent);
 
         //display default view
         openFrame(R.id.resume);
