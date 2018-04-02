@@ -17,8 +17,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.philippefouquet.stationmeteo.Db.RoomManager;
+import com.philippefouquet.stationmeteo.Fragment.CapteurFragment;
 import com.philippefouquet.stationmeteo.Fragment.GraphicFragment;
 import com.philippefouquet.stationmeteo.Fragment.ResumeFragment;
+import com.philippefouquet.stationmeteo.Other.CaptorItem;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +28,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener,
+        CapteurFragment.OnListFragmentInteractionListener {
 
     final static int MAX_SCREEN_TIME = 15;
     final static String TAG="Meteo";
@@ -207,6 +210,9 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.resume) {
             fragment = new ResumeFragment();
             title  = "Général";
+        } else if (id == R.id.affect) {
+            fragment = new CapteurFragment();
+            title  = "Affectation des capteurs";
         } else if (id >= 1000) {
             fragment = GraphicFragment.newInstance(id-1000);
             title = "Graphic";
@@ -226,5 +232,9 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void onListFragmentInteraction(CaptorItem item){
+
     }
 }

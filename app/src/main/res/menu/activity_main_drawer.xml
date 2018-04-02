@@ -4,10 +4,22 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/resume"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_slideshow"
             android:title="Résumé"
             android:checked="true"/>
     </group>
+
+    <item
+        android:title="Configuration"
+        android:id="@+id/groupe_config">
+        <menu>
+            <item
+                android:id="@+id/affect"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Affectation des capteurs"
+                android:checked="true"/>
+        </menu>
+    </item>
 
     <item
         android:title="Graphique"
