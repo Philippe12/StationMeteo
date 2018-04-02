@@ -271,7 +271,12 @@ public class CapteurFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mqttAndroidClient.close();
+        try {
+            mqttAndroidClient.disconnect();
+        } catch (MqttException e) {
+            e.printStackTrace();
+        }
+        //mqttAndroidClient.close();
     }
 
     /**
