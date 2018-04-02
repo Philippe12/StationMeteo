@@ -25,7 +25,7 @@ public class comi2c extends Service {
     public final static String PRES = "I2C_PRES";
     public final static String STATUS = "I2C_STATUS";
 
-    final static int ID_ROOM = 0;
+    public final static int ID_ROOM = 0;
     private int m_fd;
     private List<Double> m_temp = new ArrayList<Double>();
     private List<Double> m_pres = new ArrayList<Double>();

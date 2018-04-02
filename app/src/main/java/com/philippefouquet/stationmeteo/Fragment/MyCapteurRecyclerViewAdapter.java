@@ -14,12 +14,12 @@ import android.widget.TextView;
 import com.philippefouquet.stationmeteo.Other.CaptorItem;
 import com.philippefouquet.stationmeteo.R;
 import com.philippefouquet.stationmeteo.Fragment.CapteurFragment.OnListFragmentInteractionListener;
-import com.philippefouquet.stationmeteo.Fragment.dummy.DummyContent.DummyItem;
+import com.philippefouquet.stationmeteo.Fragment.dummy.RoomContent.RoomItem;
 
 import java.util.List;
 
 /**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
+ * {@link RecyclerView.Adapter} that can display a {@link RoomItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */

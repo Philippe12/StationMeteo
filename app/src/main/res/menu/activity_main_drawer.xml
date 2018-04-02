@@ -18,6 +18,11 @@
                 android:icon="@drawable/ic_menu_manage"
                 android:title="Affectation des capteurs"
                 android:checked="true"/>
+            <item
+                android:id="@+id/room"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Définition des piéces"
+                android:checked="true"/>
         </menu>
     </item>
 

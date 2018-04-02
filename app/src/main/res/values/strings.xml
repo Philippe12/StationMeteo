@@ -24,4 +24,7 @@
     <string name="temp">Température</string>
     <string name="hum">Humidité</string>
     <string name="pres">Pression</string>
+    <string name="name">Nom</string>
+    <string name="remove">Supprimer</string>
+    <string name="add">Ajouter</string>
 </resources>

@@ -2,6 +2,7 @@ package com.philippefouquet.stationmeteo;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,6 +21,9 @@ import com.philippefouquet.stationmeteo.Db.RoomManager;
 import com.philippefouquet.stationmeteo.Fragment.CapteurFragment;
 import com.philippefouquet.stationmeteo.Fragment.GraphicFragment;
 import com.philippefouquet.stationmeteo.Fragment.ResumeFragment;
+import com.philippefouquet.stationmeteo.Fragment.RoomConfigFragment;
+import com.philippefouquet.stationmeteo.Fragment.RoomFragment;
+import com.philippefouquet.stationmeteo.Fragment.dummy.RoomContent;
 import com.philippefouquet.stationmeteo.Other.CaptorItem;
 
 import java.io.File;
@@ -29,7 +33,9 @@ import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        CapteurFragment.OnListFragmentInteractionListener {
+        CapteurFragment.OnListFragmentInteractionListener,
+        RoomFragment.OnListFragmentInteractionListener,
+        RoomConfigFragment.OnFragmentInteractionListener {
 
     final static int MAX_SCREEN_TIME = 15;
     final static String TAG="Meteo";
@@ -89,6 +95,30 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        //run service
+        Intent intent = new Intent(this, comi2c.class);
+        startService(intent);
+        intent = new Intent(this, MQTTBroker.class);
+        startService(intent);
+
+        //display default view
+        openFrame(R.id.resume);
+
+        makeMenu();
+
+        //pwer on
+        //PowerManager pm = (PowerManager)getSystemService(Activity.POWER_SERVICE);
+        //PowerManager.WakeLock w1 = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, TAG);
+        //w1.acquire();
+        setScreenState(1);
+
+        //unlock screen
+        //KeyguardManager kgManager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);
+        //KeyguardManager.KeyguardLock kLock = kgManager.newKeyguardLock(KEYGUARD_SERVICE);
+        //kLock.disableKeyguard();
+    }
+
+    private void makeMenu(){
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         Menu gr = navigationView.getMenu().findItem(R.id.groupe_graph).getSubMenu();
@@ -107,26 +137,6 @@ public class MainActivity extends AppCompatActivity
             while (c.moveToNext());
         }
         c.close(); // fermeture du curseur
-
-        //run service
-        Intent intent = new Intent(this, comi2c.class);
-        startService(intent);
-        intent = new Intent(this, MQTTBroker.class);
-        startService(intent);
-
-        //display default view
-        openFrame(R.id.resume);
-
-        //pwer on
-        //PowerManager pm = (PowerManager)getSystemService(Activity.POWER_SERVICE);
-        //PowerManager.WakeLock w1 = pm.newWakeLock(PowerManager.FULL_WAKE_LOCK | PowerManager.ON_AFTER_RELEASE, TAG);
-        //w1.acquire();
-        setScreenState(1);
-
-        //unlock screen
-        //KeyguardManager kgManager = (KeyguardManager)getSystemService(Activity.KEYGUARD_SERVICE);
-        //KeyguardManager.KeyguardLock kLock = kgManager.newKeyguardLock(KEYGUARD_SERVICE);
-        //kLock.disableKeyguard();
     }
 
     private void stopTimerScreen(){
@@ -188,9 +198,9 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        /*if (id == R.id.action_settings) {
             return true;
-        }
+        }*/
 
         return super.onOptionsItemSelected(item);
     }
@@ -213,6 +223,9 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.affect) {
             fragment = new CapteurFragment();
             title  = "Affectation des capteurs";
+        } else if (id == R.id.room) {
+            fragment = new RoomFragment();
+            title  = "Définition des piéces";
         } else if (id >= 1000) {
             fragment = GraphicFragment.newInstance(id-1000);
             title = "Graphic";
@@ -236,5 +249,25 @@ public class MainActivity extends AppCompatActivity
 
     public void onListFragmentInteraction(CaptorItem item){
 
+    }
+
+    public void onListFragmentInteraction(RoomContent.RoomItem item){
+        Fragment fragment = new RoomConfigFragment(item.getRoom());
+        String title  = "Définition des piéces";
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_frame, fragment);
+        ft.commit();
+    }
+
+    public void onFragmentInteraction(boolean back){
+        if(back) {
+            Fragment fragment = new RoomFragment();
+            String title = "Définition des piéces";
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.content_frame, fragment);
+            ft.commit();
+        }
+
+        makeMenu();
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><!DOCTYPE properties SYSTEM
+    "http://java.sun.com/dtd/properties.dtd">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/addRoom"
+        android:icon="@android:drawable/ic_input_add"
+        android:title="@string/add" />
+</menu>

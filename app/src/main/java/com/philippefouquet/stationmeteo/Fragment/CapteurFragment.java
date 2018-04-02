@@ -3,7 +3,6 @@ package com.philippefouquet.stationmeteo.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,8 +12,6 @@ import android.view.ViewGroup;
 
 import com.philippefouquet.stationmeteo.Other.CaptorItem;
 import com.philippefouquet.stationmeteo.R;
-import com.philippefouquet.stationmeteo.Fragment.dummy.DummyContent;
-import com.philippefouquet.stationmeteo.Fragment.dummy.DummyContent.DummyItem;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
@@ -30,7 +27,6 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * A fragment representing a list of Items.
