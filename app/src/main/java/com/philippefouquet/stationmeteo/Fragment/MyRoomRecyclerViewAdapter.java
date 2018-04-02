@@ -7,10 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.philippefouquet.stationmeteo.comi2c;
 import com.philippefouquet.stationmeteo.R;
 import com.philippefouquet.stationmeteo.Fragment.RoomFragment.OnListFragmentInteractionListener;
-import com.philippefouquet.stationmeteo.Fragment.dummy.RoomContent.RoomItem;
+import com.philippefouquet.stationmeteo.Other.RoomContent.RoomItem;
 
 import java.util.List;
 

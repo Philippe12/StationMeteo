@@ -1,4 +1,4 @@
-package com.philippefouquet.stationmeteo.Fragment.dummy;
+package com.philippefouquet.stationmeteo.Other;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -89,7 +89,7 @@ public class RoomContent {
 
         @Override
         public String toString() {
-            return "";
+            return mRoom.getName();
         }
 
         public Room getRoom() {

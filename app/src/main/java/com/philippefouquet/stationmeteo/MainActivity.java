@@ -2,7 +2,6 @@ package com.philippefouquet.stationmeteo;
 
 import android.content.Intent;
 import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -23,7 +22,7 @@ import com.philippefouquet.stationmeteo.Fragment.GraphicFragment;
 import com.philippefouquet.stationmeteo.Fragment.ResumeFragment;
 import com.philippefouquet.stationmeteo.Fragment.RoomConfigFragment;
 import com.philippefouquet.stationmeteo.Fragment.RoomFragment;
-import com.philippefouquet.stationmeteo.Fragment.dummy.RoomContent;
+import com.philippefouquet.stationmeteo.Other.RoomContent;
 import com.philippefouquet.stationmeteo.Other.CaptorItem;
 
 import java.io.File;

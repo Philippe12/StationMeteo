@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import com.philippefouquet.stationmeteo.Db.Room;
 import com.philippefouquet.stationmeteo.Db.RoomManager;
 import com.philippefouquet.stationmeteo.R;
-import com.philippefouquet.stationmeteo.Fragment.dummy.RoomContent;
-import com.philippefouquet.stationmeteo.Fragment.dummy.RoomContent.RoomItem;
+import com.philippefouquet.stationmeteo.Other.RoomContent;
+import com.philippefouquet.stationmeteo.Other.RoomContent.RoomItem;
 
 /**
  * A fragment representing a list of Items.

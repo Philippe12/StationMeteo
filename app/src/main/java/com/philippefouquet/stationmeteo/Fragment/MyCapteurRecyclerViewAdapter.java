@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.philippefouquet.stationmeteo.Other.CaptorItem;
 import com.philippefouquet.stationmeteo.R;
 import com.philippefouquet.stationmeteo.Fragment.CapteurFragment.OnListFragmentInteractionListener;
-import com.philippefouquet.stationmeteo.Fragment.dummy.RoomContent.RoomItem;
+import com.philippefouquet.stationmeteo.Other.RoomContent.RoomItem;
 
 import java.util.List;
 
