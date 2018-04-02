@@ -12,7 +12,7 @@ import android.os.Build;
 public class MySQLite extends SQLiteOpenHelper {
     private static final String DATABASE_NAME_ESA = "/esa/db.sqlite";
     private static final String DATABASE_NAME_QEMU = "db.sqlite";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static MySQLite sInstance;
 
     public static synchronized MySQLite getInstance(Context context) {
@@ -60,6 +60,10 @@ public class MySQLite extends SQLiteOpenHelper {
         // Mise à jour de la base de données
         // méthode appelée sur incrémentation de DATABASE_VERSION
         // on peut faire ce qu'on veut ici, comme recréer la base :
-        onCreate(sqLiteDatabase);
+        switch (i){
+            case 1:
+                sqLiteDatabase.execSQL(CapteurManager.CREATE_TABLE_CAPTEUR);
+        }
+        //onCreate(sqLiteDatabase);
     }
 }
