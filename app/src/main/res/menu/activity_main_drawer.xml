@@ -17,12 +17,14 @@
                 android:id="@+id/affect"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="Affectation des capteurs"
-                android:checked="true"/>
+                android:checkable="true"
+                android:checked="false"/>
             <item
                 android:id="@+id/room"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="Définition des piéces"
-                android:checked="true"/>
+                android:checkable="true"
+                android:checked="false"/>
         </menu>
     </item>
 
