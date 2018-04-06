@@ -44,7 +44,6 @@ public class MyCapteurRecyclerViewAdapter extends RecyclerView.Adapter<MyCapteur
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mCapteurId.setText(mValues.get(position).getId());
-        holder.mName.setText(mValues.get(position).getName(),TextView.BufferType.EDITABLE);
         if(mValues.get(position).getStatus()) {
             holder.mImageSatus.setImageResource(android.R.drawable.presence_online);
         }else{
@@ -72,7 +71,6 @@ public class MyCapteurRecyclerViewAdapter extends RecyclerView.Adapter<MyCapteur
         public final View mView;
         public final TextView mCapteurId;
         public final ImageView mImageSatus;
-        public final EditText mName;
         public CaptorItem mItem;
 
         public ViewHolder(View view) {
@@ -80,7 +78,6 @@ public class MyCapteurRecyclerViewAdapter extends RecyclerView.Adapter<MyCapteur
             mView = view;
             mCapteurId = (TextView) view.findViewById(R.id.capteurId);
             mImageSatus = (ImageView) view.findViewById(R.id.imageStatus);
-            mName = (EditText) view.findViewById(R.id.capteurName);
         }
 
         @Override
@@ -91,31 +88,15 @@ public class MyCapteurRecyclerViewAdapter extends RecyclerView.Adapter<MyCapteur
 
     public void refresh(Activity ac)
     {
-        HandlerThread h = new HandlerThread("MyHandlerThread");
-        h.start();
-        Looper l = h.getLooper();
-        new android.os.Handler(l).postDelayed(new Runnable() {
+        if(ac == null) return;
+        ac.runOnUiThread(new Runnable() {
+
             @Override
             public void run() {
-                try {
-                    ac.runOnUiThread(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            MyCapteurRecyclerViewAdapter.this.notifyDataSetChanged();
-                        }
-                    });
-                    Thread.sleep(300);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                //movies.add(0,movies.get(new Random().nextInt(movies.size())));
-
-                //MyCapteurRecyclerViewAdapter.this.notifyDataSetChanged();
-
-                //mSwiper.setRefreshing(false);
+                MyCapteurRecyclerViewAdapter.this.notifyDataSetChanged();
             }
-        },3000);
+        });
+
     }
 
 }

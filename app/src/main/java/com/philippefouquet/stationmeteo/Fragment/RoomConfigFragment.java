@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 
 import com.philippefouquet.stationmeteo.Db.Room;
 import com.philippefouquet.stationmeteo.Db.RoomManager;
+import com.philippefouquet.stationmeteo.Other.CaptorItem;
 import com.philippefouquet.stationmeteo.R;
 import com.philippefouquet.stationmeteo.comi2c;
 
@@ -23,7 +24,8 @@ import com.philippefouquet.stationmeteo.comi2c;
  * {@link RoomConfigFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class RoomConfigFragment extends Fragment {
+public class RoomConfigFragment extends Fragment
+    implements CapteurFragment.OnListFragmentInteractionListener {
     // TODO: Rename parameter arguments, choose names that match
 
     private OnFragmentInteractionListener mListener;
@@ -52,6 +54,7 @@ public class RoomConfigFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle sevedInstanceState) {
+
         ImageButton bp = view.findViewById(R.id.deleteButton);
         if(mRoom.getId()== comi2c.ID_ROOM){
             bp.setVisibility(ImageButton.INVISIBLE);
@@ -133,4 +136,9 @@ public class RoomConfigFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(boolean back);
     }
+
+    public void onListFragmentInteraction(CaptorItem item){
+
+    }
+
 }

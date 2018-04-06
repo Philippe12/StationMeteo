@@ -12,8 +12,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.philippefouquet.stationmeteo.*;
+import com.philippefouquet.stationmeteo.Other.MQTTClient;
 
 public class ResumeFragment extends Fragment {
+
+    MQTTClient mqttClient;
+    final String subscriptionTopic = "b4e62d155617/sensor/#";
 
     private OnFragmentInteractionListener mListener;
 
@@ -79,6 +83,7 @@ public class ResumeFragment extends Fragment {
                     + " must implement OnFragmentInteractionListener");
         }*/
         getActivity().registerReceiver(thpBroadcastReceiver, filter);
+        openMQTT();
     }
 
     @Override
@@ -86,6 +91,7 @@ public class ResumeFragment extends Fragment {
         super.onDetach();
         mListener = null;
         getActivity().unregisterReceiver(thpBroadcastReceiver);
+        mqttClient.Disconnect();
     }
 
     /**
@@ -102,4 +108,30 @@ public class ResumeFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+    private void openMQTT(){
+
+        mqttClient = new MQTTClient();
+        mqttClient.subscribeToTopic(new MQTTClient.MQTTCallback(subscriptionTopic){
+
+            @Override
+            public void ReciveTopic(String topic, String Value){
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        TextView txt;
+                        if(topic.contains("temperature")){
+                            txt= (TextView)getView().findViewById(R.id.textExTemp);
+                            txt.setText(String.format("%.2f", new Float(Value)));
+                        }
+                        if(topic.contains("humidity")){
+                            txt= (TextView)getView().findViewById(R.id.textExHum);
+                            txt.setText(String.format("%.2f", new Float(Value)));
+                        }
+                    }
+                });
+            }
+        });
+        mqttClient.Connect(getActivity());
+    }
 }
+
