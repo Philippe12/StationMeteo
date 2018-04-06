@@ -116,9 +116,85 @@
                 android:id="@+id/textView6"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="OUT"
                 android:textAlignment="center"
                 android:textSize="30sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:contentDescription="TODO"
+                    android:scaleType="fitCenter"
+                    android:theme="@style/AppTheme.IconMesure"
+                    app:srcCompat="@drawable/ic_thermometer" />
+
+                <TextView
+                    android:id="@+id/textExTemp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:elevation="12dp"
+                    android:text="23.34"
+                    android:theme="@style/AppTheme.TextMesure" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:contentDescription="TODO"
+                    android:scaleType="fitCenter"
+                    android:theme="@style/AppTheme.IconMesure"
+                    app:srcCompat="@drawable/ic_hygrometer" />
+
+                <TextView
+                    android:id="@+id/textExHum"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="23.34"
+                    android:theme="@style/AppTheme.TextMesure" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="62dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/imageButton6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:scaleType="fitCenter"
+                    android:theme="@style/AppTheme.IconMesure"
+                    android:visibility="invisible"
+                    app:srcCompat="@drawable/ic_pressure" />
+
+                <TextView
+                    android:id="@+id/textExPres"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="23.34"
+                    android:theme="@style/AppTheme.TextMesure"
+                    android:visibility="invisible" />
+
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>
