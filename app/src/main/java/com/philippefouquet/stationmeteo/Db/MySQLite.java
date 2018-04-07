@@ -12,7 +12,7 @@ import android.os.Build;
 public class MySQLite extends SQLiteOpenHelper {
     private static final String DATABASE_NAME_ESA = "/esa/db.sqlite";
     private static final String DATABASE_NAME_QEMU = "db.sqlite";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static MySQLite sInstance;
 
     public static synchronized MySQLite getInstance(Context context) {
@@ -63,6 +63,8 @@ public class MySQLite extends SQLiteOpenHelper {
         switch (i){
             case 1:
                 sqLiteDatabase.execSQL(CapteurManager.CREATE_TABLE_CAPTEUR);
+            case 2:
+                sqLiteDatabase.execSQL(RoomManager.UPDATE_TABLE_V2_TO_V3);
         }
         //onCreate(sqLiteDatabase);
     }

@@ -13,12 +13,18 @@ public class RoomManager {
     private static final String TABLE_NAME = "Room";
     public static final String KEY_ID="id";
     public static final String KEY_NAME="name";
+    public static final String KEY_CAPTOR="captor";
 
     public static final String CREATE_TABLE_ROOM = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+KEY_ID+" INTEGER primary key," +
             " "+KEY_NAME+" STRING" +
             ");";
+
+    public static final String UPDATE_TABLE_V2_TO_V3 = "ALTER TABLE "+TABLE_NAME+
+            " ADD" +
+            " "+KEY_CAPTOR+" STRING" +
+            ";";
 
     private MySQLite maBaseSQLite; // notre gestionnaire du fichier SQLite
     private SQLiteDatabase db;
@@ -47,6 +53,7 @@ public class RoomManager {
         ContentValues values = new ContentValues();
         values.put(KEY_ID, room.getId());
         values.put(KEY_NAME, room.getName());
+        values.put(KEY_CAPTOR, room.getCapteur());
 
         // insert() retourne l'id du nouvel enregistrement inséré, ou -1 en cas d'erreur
         return db.insert(TABLE_NAME,null,values);
@@ -58,6 +65,7 @@ public class RoomManager {
 
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, room.getName());
+        values.put(KEY_CAPTOR, room.getCapteur());
 
         String where = KEY_ID+" = ?";
         String[] whereArgs = {room.getId()+""};
@@ -84,6 +92,7 @@ public class RoomManager {
         Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+KEY_ID+"="+id, null);
         if (c.moveToFirst()) {
             a.setName(c.getString(c.getColumnIndex(KEY_NAME)));
+            a.setCapteur(c.getString(c.getColumnIndex(KEY_CAPTOR)));
             c.close();
             return a;
         }

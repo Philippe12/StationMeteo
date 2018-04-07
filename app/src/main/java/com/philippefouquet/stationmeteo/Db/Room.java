@@ -7,13 +7,15 @@ package com.philippefouquet.stationmeteo.Db;
 public class Room {
     private int id;
     private String name;
+    private String capteur;
 
     public Room(){
     }
 
-    public Room(int id, String name){
+    public Room(int id, String name, String capteur){
         this.id = id;
         this.name = name;
+        this.capteur = capteur;
     }
 
     public int getId() {
@@ -30,5 +32,13 @@ public class Room {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getCapteur() {
+        return capteur;
+    }
+
+    public void setCapteur(String capteur) {
+        this.capteur = capteur;
     }
 }

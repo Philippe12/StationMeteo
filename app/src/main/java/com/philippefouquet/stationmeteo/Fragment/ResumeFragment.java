@@ -111,7 +111,7 @@ public class ResumeFragment extends Fragment {
 
     private void openMQTT(){
 
-        mqttClient = new MQTTClient();
+        mqttClient = new MQTTClient("Resume");
         mqttClient.subscribeToTopic(new MQTTClient.MQTTCallback(subscriptionTopic){
 
             @Override

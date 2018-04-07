@@ -161,7 +161,7 @@ public class comi2c extends Service {
         roomManager = new RoomManager(this);
         roomManager.open();
         if( roomManager.get(ID_ROOM) == null ) {
-            roomManager.add(new Room(ID_ROOM, "in"));
+            roomManager.add(new Room(ID_ROOM, "in", "de"));
         }
         thpManager = new THPManager(this);
         thpManager.open();

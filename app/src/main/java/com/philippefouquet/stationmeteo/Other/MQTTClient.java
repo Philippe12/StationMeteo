@@ -2,6 +2,8 @@ package com.philippefouquet.stationmeteo.Other;
 
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
@@ -23,7 +25,7 @@ public class MQTTClient {
 
     private MqttAndroidClient mqttAndroidClient;
     private final String serverUri = "tcp://192.168.1.21:1883";
-    private final String clientId = "AndroidClient" + System.nanoTime();
+    private String clientId;
     private List<MQTTCallback> mTopicList = new ArrayList<MQTTCallback>();
 
     public abstract static class MQTTCallback{
@@ -44,6 +46,14 @@ public class MQTTClient {
         public abstract void ReciveTopic(String topic, String Value);
     }
 
+//    public MQTTClient(){
+//        clientId = "AndroidClient_" + System.nanoTime();
+//    }
+
+    public MQTTClient(String client){
+        clientId = "AndroidClient_" + client;
+    }
+
     private void Log(String msg){
         Log.i(TAG, clientId+ " => " + msg);
     }
@@ -56,6 +66,16 @@ public class MQTTClient {
     public  void subscribeToTopic(){
         for (int id = 0; id < mTopicList.size(); id++){
             subscribeToTopic(mTopicList.get(id).getTopic(), mTopicList.get(id));
+        }
+    }
+
+    public  void unSubscribeToTopic(){
+        for (int id = 0; id < mTopicList.size(); id++){
+            try {
+                mqttAndroidClient.unsubscribe(mTopicList.get(id).getTopic());
+            }catch (Exception e){
+
+            }
         }
     }
 
@@ -151,7 +171,10 @@ public class MQTTClient {
     public void Disconnect(){
         if(mqttAndroidClient!=null) {
             try {
+                unSubscribeToTopic();
                 mqttAndroidClient.disconnect();
+                mqttAndroidClient.unregisterResources();
+                mqttAndroidClient = null;
             } catch (Exception e){
                 Log (e.toString() );
             }

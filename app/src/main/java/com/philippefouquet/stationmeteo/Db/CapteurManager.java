@@ -91,6 +91,22 @@ public class CapteurManager {
         return null;
     }
 
+    public Capteur getForRoom(int id) {
+        // Retourne l'animal dont l'id est passé en paramètre
+
+        Capteur a=new Capteur();
+
+        Cursor c = db.rawQuery("SELECT * FROM "+TABLE_NAME+" WHERE "+KEY_ROOM+"="+id, null);
+        if (c.moveToFirst()) {
+            a.setId(c.getString(c.getColumnIndex(KEY_ID)));
+            a.setRoom(c.getInt(c.getColumnIndex(KEY_ROOM)));
+            c.close();
+            return a;
+        }
+
+        return null;
+    }
+
     public Cursor get() {
         // sélection de tous les enregistrements de la table
         return db.rawQuery("SELECT * FROM "+TABLE_NAME, null);

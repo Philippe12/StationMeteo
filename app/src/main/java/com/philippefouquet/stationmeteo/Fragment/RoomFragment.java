@@ -12,6 +12,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.philippefouquet.stationmeteo.Db.Room;
 import com.philippefouquet.stationmeteo.Db.RoomManager;

@@ -5,14 +5,14 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Fragment.RoomConfigFragment"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".Fragment.RoomConfigFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
@@ -20,7 +20,8 @@
             android:id="@+id/textView4"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="0.2"
+            android:labelFor="@id/editName"
             android:text="@string/name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -31,8 +32,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10"
-            android:inputType="text"
-            android:text="Name" />
+            android:inputType="text" />
+
+        <ImageButton
+            android:id="@+id/deleteButton"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:contentDescription="@string/remove"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
 
     </LinearLayout>
 
@@ -42,13 +50,20 @@
         android:layout_weight="1"
         android:orientation="horizontal">
 
-        <ImageButton
-            android:id="@+id/deleteButton"
-            android:layout_width="0dp"
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/remove"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
+            android:layout_weight="9"
+            android:text="@string/use_capteur" />
+
+        <Spinner
+            android:id="@+id/configCapteur"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="9"
+            android:spinnerMode="dialog" />
+
     </LinearLayout>
 
 

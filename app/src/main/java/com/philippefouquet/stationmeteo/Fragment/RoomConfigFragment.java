@@ -1,5 +1,6 @@
 package com.philippefouquet.stationmeteo.Fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,11 +10,20 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.philippefouquet.stationmeteo.Db.Capteur;
+import com.philippefouquet.stationmeteo.Db.CapteurManager;
 import com.philippefouquet.stationmeteo.Db.Room;
 import com.philippefouquet.stationmeteo.Db.RoomManager;
+import com.philippefouquet.stationmeteo.Other.CaptorContent;
 import com.philippefouquet.stationmeteo.Other.CaptorItem;
 import com.philippefouquet.stationmeteo.R;
 import com.philippefouquet.stationmeteo.comi2c;
@@ -24,20 +34,24 @@ import com.philippefouquet.stationmeteo.comi2c;
  * {@link RoomConfigFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  */
-public class RoomConfigFragment extends Fragment
-    implements CapteurFragment.OnListFragmentInteractionListener {
+public class RoomConfigFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
 
     private OnFragmentInteractionListener mListener;
     private Room mRoom;
+    private CaptorContent mLstCapteur = new CaptorContent();
+    private RoomManager mRoomManager;
+    private ArrayAdapter<CaptorItem> spinnerArrayAdapter;
+    private Boolean firstRecive = true;
 
     public RoomConfigFragment(){
         mRoom = new Room();
     }
 
+    @SuppressLint("ValidFragment")
     public RoomConfigFragment(Room room) {
+        super();
         mRoom = room;
-        // Required empty public constructor
     }
 
     @Override
@@ -103,6 +117,29 @@ public class RoomConfigFragment extends Fragment
                 }
             }
         });
+
+        Spinner sp = getView().findViewById(R.id.configCapteur);
+        //Spinner sp = getView().findViewById(R.id.configCapteur);
+        spinnerArrayAdapter = new ArrayAdapter<CaptorItem>
+                (getActivity(), android.R.layout.simple_spinner_item, mLstCapteur.ITEMS); //selected item will look like a spinner set from XML
+        spinnerArrayAdapter.setDropDownViewResource(android.R.layout
+                .simple_spinner_dropdown_item);
+        sp.setAdapter(spinnerArrayAdapter);
+
+        sp.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(!firstRecive) {
+                    String cap = mLstCapteur.ITEMS.get(i).getId();
+                    mRoom.setCapteur(cap);
+                    mRoomManager.modify(mRoom);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
+        });
     }
 
     @Override
@@ -114,12 +151,39 @@ public class RoomConfigFragment extends Fragment
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }
+
+        mRoomManager = new RoomManager(getContext());
+        mRoomManager.open();
+
+        mLstCapteur.Run(getActivity(), "RoomCfg", new CaptorContent.CaptorContentRefrech() {
+            @Override
+            public void onCaptorContentRefrech() {
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        if(spinnerArrayAdapter != null){
+                            spinnerArrayAdapter.notifyDataSetChanged();
+                        }
+
+                        Spinner sp = getView().findViewById(R.id.configCapteur);
+                        String cap = mRoom.getCapteur();
+                        int id = mLstCapteur.Find(cap);
+                        sp.setSelection(id);
+                        if( (id >= 0) || (cap==null) || cap.equals("") ) {
+                            firstRecive = false;
+                        }
+                    }
+                });
+            }
+        });
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+        mLstCapteur.Close();
+        mRoomManager.close();
     }
 
     /**
@@ -136,9 +200,4 @@ public class RoomConfigFragment extends Fragment
         // TODO: Update argument type and name
         void onFragmentInteraction(boolean back);
     }
-
-    public void onListFragmentInteraction(CaptorItem item){
-
-    }
-
 }

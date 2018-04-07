@@ -9,8 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.philippefouquet.stationmeteo.Other.CaptorContent;
 import com.philippefouquet.stationmeteo.Other.CaptorItem;
 import com.philippefouquet.stationmeteo.Other.MQTTClient;
 import com.philippefouquet.stationmeteo.R;
@@ -27,17 +30,13 @@ import java.util.Timer;
  */
 public class CapteurFragment extends Fragment {
 
-    MQTTClient mqttClient;
-    final String subscriptionTopic = "count/#";
-
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
-    private List<CaptorItem> mListe = new ArrayList<CaptorItem>();
-    MyCapteurRecyclerViewAdapter mMyCapteurRecyclerViewAdapter;
-    Timer mTimer;
+    private MyCapteurRecyclerViewAdapter mMyCapteurRecyclerViewAdapter;
+    private CaptorContent mLstCapteur = new CaptorContent();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -79,37 +78,10 @@ public class CapteurFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            mMyCapteurRecyclerViewAdapter = new MyCapteurRecyclerViewAdapter(mListe, mListener);
+            mMyCapteurRecyclerViewAdapter = new MyCapteurRecyclerViewAdapter(mLstCapteur.ITEMS, mListener);
             recyclerView.setAdapter(mMyCapteurRecyclerViewAdapter);
         }
         return view;
-    }
-
-    private void openMQTT(){
-
-        mqttClient = new MQTTClient();
-        mqttClient.subscribeToTopic(new MQTTClient.MQTTCallback(subscriptionTopic){
-
-            @Override
-            public void ReciveTopic(String topic, String Value){
-                CaptorItem cap = new CaptorItem();
-                cap.setId( topic.replace("count/", ""));
-                int pos = mListe.indexOf(cap);
-                if( pos < 0 ) {
-                    mListe.add(cap);
-                }else{
-                    mListe.get(pos).SetCpt(new Integer(Value));
-                }
-
-                if (mMyCapteurRecyclerViewAdapter != null)
-                    getActivity().runOnUiThread(new Runnable() {
-                        public void run() {
-                            mMyCapteurRecyclerViewAdapter.refresh(getActivity());
-                        }
-                    });
-            }
-        });
-        mqttClient.Connect(getActivity());
     }
 
     @Override
@@ -121,14 +93,24 @@ public class CapteurFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
         }
-        openMQTT();
+        mLstCapteur.Run(getActivity(), "CapteurCfg", new CaptorContent.CaptorContentRefrech() {
+            @Override
+            public void onCaptorContentRefrech() {
+                if (mMyCapteurRecyclerViewAdapter != null)
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            mMyCapteurRecyclerViewAdapter.refresh(getActivity());
+                        }
+                    });
+            }
+        });
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        mqttClient.Disconnect();
+        mLstCapteur.Close();
     }
 
     /**

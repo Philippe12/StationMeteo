@@ -40,6 +40,7 @@ public class RoomContent {
                 Room r = new Room();
                 r.setId( c.getInt(c.getColumnIndex(RoomManager.KEY_ID)));
                 r.setName( c.getString(c.getColumnIndex(RoomManager.KEY_NAME)));
+                r.setCapteur( c.getString(c.getColumnIndex(RoomManager.KEY_CAPTOR)));
                 addItem(r);
             }while (c.moveToNext());
         }

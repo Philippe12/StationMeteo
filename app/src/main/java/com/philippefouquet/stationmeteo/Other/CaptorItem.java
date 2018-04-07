@@ -56,4 +56,9 @@ public class CaptorItem {
             mTimer.schedule( new TaskStatus(),TIMEOUT );
         }
     }
+
+    @Override
+    public String toString(){
+        return Id;
+    }
 }
