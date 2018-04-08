@@ -1,6 +1,7 @@
 package com.philippefouquet.stationmeteo.Other;
 
 import android.app.Activity;
+import android.content.Context;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -109,9 +110,9 @@ public class MQTTClient {
         }
     }
 
-    public void Connect(Activity activity){
+    public void Connect(Context context){
         try {
-            mqttAndroidClient = new MqttAndroidClient(activity, serverUri, clientId);
+            mqttAndroidClient = new MqttAndroidClient(context, serverUri, clientId);
             mqttAndroidClient.setCallback(new MqttCallbackExtended() {
                 @Override
                 public void connectComplete(boolean reconnect, String serverURI) {
