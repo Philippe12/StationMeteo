@@ -1,11 +1,7 @@
 package com.philippefouquet.stationmeteo.Other;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.view.View;
-import android.widget.Toast;
-
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -181,5 +177,21 @@ public class MQTTClient {
             }
         }
     }
+
+    public void publishMessage(String topic, String msg){
+
+        try {
+            MqttMessage message = new MqttMessage();
+            message.setPayload(msg.getBytes());
+            message.setQos(0);
+            mqttAndroidClient.publish(topic, message);
+            if(!mqttAndroidClient.isConnected()){
+                Log(mqttAndroidClient.getBufferedMessageCount() + " messages in buffer.");
+            }
+        } catch (Exception e) {
+            Log("Error Publishing: " + e.getMessage());
+        }
+    }
+
 
 }
