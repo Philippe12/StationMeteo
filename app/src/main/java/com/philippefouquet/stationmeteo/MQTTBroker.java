@@ -143,6 +143,7 @@ public class MQTTBroker extends Service {
     }
 
     public void run(){
+        stop();
         roomManager.open();
         Log.i(TAG, "restart servcie");
         Cursor c = roomManager.get();
@@ -159,5 +160,12 @@ public class MQTTBroker extends Service {
                 mqttClient.add(cl);
             }while (c.moveToNext());
         }
+    }
+
+    public void stop(){
+        for(int id = 0; id < mqttClient.size(); id ++){
+            mqttClient.get(id).Disconnect();
+        }
+        mqttClient.clear();
     }
 }
