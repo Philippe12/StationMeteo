@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:elevation="12dp"
-                    android:text="23.34"
+                    android:text="-"
                     android:theme="@style/AppTheme.TextMesure" />
 
             </LinearLayout>
@@ -75,7 +75,7 @@
                     android:id="@+id/textHum"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="23.34"
+                    android:text="-"
                     android:theme="@style/AppTheme.TextMesure" />
 
             </LinearLayout>
@@ -98,7 +98,7 @@
                     android:id="@+id/textPres"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="23.34"
+                    android:text="-"
                     android:theme="@style/AppTheme.TextMesure" />
 
             </LinearLayout>
@@ -141,7 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:elevation="12dp"
-                    android:text="23.34"
+                    android:text="-"
                     android:theme="@style/AppTheme.TextMesure" />
 
             </LinearLayout>
@@ -165,7 +165,7 @@
                     android:id="@+id/textExHum"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="23.34"
+                    android:text="-"
                     android:theme="@style/AppTheme.TextMesure" />
 
             </LinearLayout>
@@ -189,7 +189,7 @@
                     android:id="@+id/textExPres"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="23.34"
+                    android:text="-"
                     android:theme="@style/AppTheme.TextMesure"
                     android:visibility="invisible" />
 
