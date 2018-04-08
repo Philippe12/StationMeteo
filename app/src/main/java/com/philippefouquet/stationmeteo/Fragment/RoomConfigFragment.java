@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.PopupWindow;
@@ -21,10 +23,12 @@ import android.widget.Toast;
 
 import com.philippefouquet.stationmeteo.Db.Capteur;
 import com.philippefouquet.stationmeteo.Db.CapteurManager;
+import com.philippefouquet.stationmeteo.Db.Config;
 import com.philippefouquet.stationmeteo.Db.Room;
 import com.philippefouquet.stationmeteo.Db.RoomManager;
 import com.philippefouquet.stationmeteo.Other.CaptorContent;
 import com.philippefouquet.stationmeteo.Other.CaptorItem;
+import com.philippefouquet.stationmeteo.Other.ConfigAcess;
 import com.philippefouquet.stationmeteo.R;
 import com.philippefouquet.stationmeteo.comi2c;
 
@@ -36,6 +40,9 @@ import com.philippefouquet.stationmeteo.comi2c;
  */
 public class RoomConfigFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
+
+    private static final String INDOOR_CAPTOR = "indoorcaptor";
+    private static final String OUTDOOR_CAPTOR = "outdoorcaptor";
 
     private OnFragmentInteractionListener mListener;
     private Room mRoom;
@@ -115,6 +122,34 @@ public class RoomConfigFragment extends Fragment {
                 if (mListener != null) {
                     mListener.onFragmentInteraction(false);
                 }
+            }
+        });
+
+        CheckBox ch = getView().findViewById(R.id.useForIndoor);
+        Config co = ConfigAcess.getConfig(getContext(), INDOOR_CAPTOR);
+        if(co.getValue().isEmpty()){
+            ch.setChecked(false);
+        }else {
+            ch.setChecked( mRoom.getId() == Integer.parseInt(co.getValue()) );
+        }
+        ch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                ConfigAcess.setConfig(getContext(), INDOOR_CAPTOR, String.valueOf(mRoom.getId()));
+            }
+        });
+
+        ch = getView().findViewById(R.id.useForOutdoor);
+        co = ConfigAcess.getConfig(getContext(), OUTDOOR_CAPTOR);
+        if(co.getValue().isEmpty()){
+            ch.setChecked(false);
+        }else {
+            ch.setChecked( mRoom.getId() == Integer.parseInt(co.getValue()) );
+        }
+        ch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                ConfigAcess.setConfig(getContext(), OUTDOOR_CAPTOR, String.valueOf(mRoom.getId()));
             }
         });
 

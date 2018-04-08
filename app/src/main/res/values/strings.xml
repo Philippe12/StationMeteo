@@ -28,4 +28,6 @@
     <string name="remove">Supprimer</string>
     <string name="add">Ajouter</string>
     <string name="use_capteur">Utilise le capteur :</string>
+    <string name="useForOutdoor">Utilié pour mesure extérieur</string>
+    <string name="useForIndoor">Utilisé pour mesure intérieur</string>
 </resources>
