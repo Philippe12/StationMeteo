@@ -1,9 +1,13 @@
 package com.philippefouquet.stationmeteo.Fragment;
 
 import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,6 +30,7 @@ import com.philippefouquet.stationmeteo.Db.CapteurManager;
 import com.philippefouquet.stationmeteo.Db.Config;
 import com.philippefouquet.stationmeteo.Db.Room;
 import com.philippefouquet.stationmeteo.Db.RoomManager;
+import com.philippefouquet.stationmeteo.MQTTBroker;
 import com.philippefouquet.stationmeteo.Other.CaptorContent;
 import com.philippefouquet.stationmeteo.Other.CaptorItem;
 import com.philippefouquet.stationmeteo.Other.ConfigAcess;
@@ -51,6 +56,25 @@ public class RoomConfigFragment extends Fragment {
     private ArrayAdapter<CaptorItem> spinnerArrayAdapter;
     private Boolean firstRecive = true;
 
+    MQTTBroker serviceConnector;
+    boolean isBound = false;
+
+    private ServiceConnection mserviceConnector = new ServiceConnection() {
+
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            MQTTBroker.MyLocalBinder binder = (MQTTBroker.MyLocalBinder) service;
+            serviceConnector = binder.getService(); //<--------- from here on can access service!
+            isBound = true;
+        }
+
+        public void onServiceDisconnected(ComponentName arg0) {
+            serviceConnector = null;
+            isBound = false;
+        }
+
+    };
+
     public RoomConfigFragment(){
         mRoom = new Room();
     }
@@ -64,6 +88,8 @@ public class RoomConfigFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = new Intent(getActivity(), MQTTBroker.class);
+        getActivity().bindService(intent, mserviceConnector, Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -168,6 +194,9 @@ public class RoomConfigFragment extends Fragment {
                     String cap = mLstCapteur.ITEMS.get(i).getId();
                     mRoom.setCapteur(cap);
                     mRoomManager.modify(mRoom);
+                    if(serviceConnector != null){
+                        serviceConnector.run();
+                    }
                 }
             }
 
