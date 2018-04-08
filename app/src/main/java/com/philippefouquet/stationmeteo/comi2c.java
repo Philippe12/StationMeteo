@@ -10,6 +10,7 @@ import com.philippefouquet.stationmeteo.Db.RoomManager;
 import com.philippefouquet.stationmeteo.Db.THP;
 import com.philippefouquet.stationmeteo.Db.THPManager;
 import com.philippefouquet.stationmeteo.Jni.i2c;
+import com.philippefouquet.stationmeteo.Other.MQTTClient;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,22 +20,13 @@ import java.util.List;
 
 public class comi2c extends Service {
     final String TAG = "Comi2c";
-    public final static String ACTION_NEW_INTER_TEMP = "ACTION_NEW_INTER_TEMP";
-    public final static String TEMP = "I2C_TEMP";
-    public final static String HUM = "I2C_HUM";
-    public final static String PRES = "I2C_PRES";
+    private final String ID = "1";
     public final static String STATUS = "I2C_STATUS";
 
     public final static int ID_ROOM = 0;
     private int m_fd;
-    private List<Double> m_temp = new ArrayList<Double>();
-    private List<Double> m_pres = new ArrayList<Double>();
-    private List<Double> m_hum = new ArrayList<Double>();
-    private int lastHour = 0;
     private Thread m_threadService = null;
-
-    private RoomManager roomManager;
-    private THPManager thpManager;
+    private MQTTClient mqttClient;
 
     private boolean status;
 
@@ -46,7 +38,6 @@ public class comi2c extends Service {
     public comi2c() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date(System.currentTimeMillis()));
-        lastHour = calendar.get(Calendar.HOUR);
 
         m_fd = i2c.init("/dev/i2c-0");
         if(m_fd < 0)
@@ -158,66 +149,35 @@ public class comi2c extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        roomManager = new RoomManager(this);
-        roomManager.open();
-        if( roomManager.get(ID_ROOM) == null ) {
-            roomManager.add(new Room(ID_ROOM, "in", "de"));
-        }
-        thpManager = new THPManager(this);
-        thpManager.open();
+        mqttClient = new MQTTClient("com_i2c");
+        /*mqttClient.subscribeToTopic(new MQTTClient.MQTTCallback("") {
+            @Override
+            public void ReciveTopic(String topic, String Value) {
 
+            }
+        });*/
+        mqttClient.Connect(getApplication());
         m_threadService = new Thread(){
             @Override
             public void run() {
+                int count = 0;
                 while(true){
                     double t, h, p;
                     status = true;
                     t = temperture_sht25();
                     h = humidity_sht25();
                     p = pressure_f();
-
-                    m_temp.add( t );
-                    m_hum.add( h );
-                    m_pres.add( p );
-
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(new Date(System.currentTimeMillis()));
-                    int hours = calendar.get(Calendar.HOUR);
-                    if( lastHour != hours ) {
-                        lastHour = hours;
-                        THP thp = new THP();
-                        thp.setRoom(ID_ROOM);
-                        thp.setDate(System.currentTimeMillis());
-                        thp.setHumidityMax(Collections.max( m_hum ));
-                        thp.setHumidityMin(Collections.min( m_hum ));
-                        thp.setHumidityMoy(computeMoyen( m_hum ));
-
-                        thp.setPressureMax(Collections.max( m_pres ));
-                        thp.setPressureMin(Collections.min( m_pres ));
-                        thp.setPressureMoy(computeMoyen( m_pres ));
-
-                        thp.setTemperatureMax(Collections.max( m_temp ));
-                        thp.setTemperatureMin(Collections.min( m_temp ));
-                        thp.setTemperatureMoy(computeMoyen( m_temp ));
-                        thpManager.add(thp);
-
-                        m_temp.clear();
-                        m_hum.clear();
-                        m_pres.clear();
-                    }
-
-                    Intent intent = new Intent();
-                    intent.setAction(ACTION_NEW_INTER_TEMP);
-
-                    intent.putExtra(TEMP, t);
-                    intent.putExtra(HUM, h);
-                    intent.putExtra(PRES, p);
-                    intent.putExtra(STATUS, status);
                     Log.i(TAG, "New measure");
+                    if( m_fd >= 0 ){
+                        mqttClient.publishMessage(ID+ "/sensor/temperature", String.valueOf(t));
+                        mqttClient.publishMessage(ID+ "/sensor/humidity", String.valueOf(h));
+                        mqttClient.publishMessage(ID+ "/sensor/pressure", String.valueOf(p));
+                        mqttClient.publishMessage("count/"+ID, String.valueOf(count));
+                    }
+                    count++;
 
-                    sendBroadcast(intent);
                     try {
-                        Thread.sleep(10000);
+                        Thread.sleep(5000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
