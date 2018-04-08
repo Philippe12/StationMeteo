@@ -94,7 +94,12 @@ public class ResumeFragment extends Fragment {
         rm.open();
         mqttClientOut = new MQTTClient("Resume_out");
         Config co = ConfigAcess.getConfig(getContext(), RoomConfigFragment.OUTDOOR_CAPTOR);
-        Room ro = rm.get( Integer.parseInt(co.getValue()) );
+        Room ro;
+        if(!co.getValue().isEmpty()) {
+            ro = rm.get(Integer.parseInt(co.getValue()));
+        }else{
+            ro = new Room();
+        }
         String topic = ro.getCapteur()+ "/#";
         TextView tv = getView().findViewById(R.id.textTitleOut);
         tv.setText(ro.getName());
@@ -121,7 +126,11 @@ public class ResumeFragment extends Fragment {
 
         mqttClientIn = new MQTTClient("Resume_in");
         co = ConfigAcess.getConfig(getContext(), RoomConfigFragment.INDOOR_CAPTOR);
-        ro = rm.get( Integer.parseInt(co.getValue()) );
+        if(!co.getValue().isEmpty()) {
+            ro = rm.get(Integer.parseInt(co.getValue()));
+        }else{
+            ro = new Room();
+        }
         topic = ro.getCapteur()+ "/#";
         tv = getView().findViewById(R.id.textTitle);
         tv.setText(ro.getName());
