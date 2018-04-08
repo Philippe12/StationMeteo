@@ -23,7 +23,7 @@ public class THPManager {
     public static final String KEY_TEMPERATURE="temperature";
     public static final String KEY_PRESSURE="PRESSURE";
 
-    public static final String CREATE_TABLE_THP = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+KEY_DATE+" LONG NOT NULL," +
             " "+KEY_ROOM+" INTEGER NOT NULL," +

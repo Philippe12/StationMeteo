@@ -15,10 +15,11 @@ public class RoomManager {
     public static final String KEY_NAME="name";
     public static final String KEY_CAPTOR="captor";
 
-    public static final String CREATE_TABLE_ROOM = "CREATE TABLE "+TABLE_NAME+
+    public static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+
             " (" +
             " "+KEY_ID+" INTEGER primary key," +
-            " "+KEY_NAME+" STRING" +
+            " "+KEY_NAME+" STRING," +
+            " "+KEY_CAPTOR+" STRING" +
             ");";
 
     public static final String UPDATE_TABLE_V2_TO_V3 = "ALTER TABLE "+TABLE_NAME+

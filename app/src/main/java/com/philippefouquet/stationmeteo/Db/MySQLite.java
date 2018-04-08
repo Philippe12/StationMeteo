@@ -12,7 +12,7 @@ import android.os.Build;
 public class MySQLite extends SQLiteOpenHelper {
     private static final String DATABASE_NAME_ESA = "/esa/db.sqlite";
     private static final String DATABASE_NAME_QEMU = "db.sqlite";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static MySQLite sInstance;
 
     public static synchronized MySQLite getInstance(Context context) {
@@ -51,8 +51,10 @@ public class MySQLite extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         // Création de la base de données
         // on exécute ici les requêtes de création des tables
-        sqLiteDatabase.execSQL(THPManager.CREATE_TABLE_THP);
-        sqLiteDatabase.execSQL(RoomManager.CREATE_TABLE_ROOM);
+        sqLiteDatabase.execSQL(THPManager.CREATE_TABLE);
+        sqLiteDatabase.execSQL(RoomManager.CREATE_TABLE);
+        sqLiteDatabase.execSQL(CapteurManager.CREATE_TABLE);
+        sqLiteDatabase.execSQL(ConfigManager.CREATE_TABLE);
     }
 
     @Override
@@ -62,9 +64,11 @@ public class MySQLite extends SQLiteOpenHelper {
         // on peut faire ce qu'on veut ici, comme recréer la base :
         switch (i){
             case 1:
-                sqLiteDatabase.execSQL(CapteurManager.CREATE_TABLE_CAPTEUR);
+                sqLiteDatabase.execSQL(CapteurManager.CREATE_TABLE);
             case 2:
                 sqLiteDatabase.execSQL(RoomManager.UPDATE_TABLE_V2_TO_V3);
+            case 3:
+                sqLiteDatabase.execSQL(ConfigManager.CREATE_TABLE);
         }
         //onCreate(sqLiteDatabase);
     }
