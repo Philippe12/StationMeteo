@@ -12,46 +12,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.philippefouquet.stationmeteo.*;
+import com.philippefouquet.stationmeteo.Db.Config;
+import com.philippefouquet.stationmeteo.Db.ConfigManager;
+import com.philippefouquet.stationmeteo.Db.Room;
+import com.philippefouquet.stationmeteo.Db.RoomManager;
+import com.philippefouquet.stationmeteo.Other.ConfigAcess;
 import com.philippefouquet.stationmeteo.Other.MQTTClient;
 
 public class ResumeFragment extends Fragment {
 
-    MQTTClient mqttClient;
-    final String subscriptionTopic = "b4e62d155617/sensor/#";
+    MQTTClient mqttClientOut;
+    MQTTClient mqttClientIn;
 
     private OnFragmentInteractionListener mListener;
 
     public ResumeFragment() {
         // Required empty public constructor
-    }
-
-    IntentFilter filter = new IntentFilter(comi2c.ACTION_NEW_INTER_TEMP);
-    private BroadcastReceiver thpBroadcastReceiver=new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            double t = intent.getDoubleExtra(comi2c.TEMP,0);
-            double h = intent.getDoubleExtra(comi2c.HUM,0);
-            double p = intent.getDoubleExtra(comi2c.PRES,0);
-            boolean s = intent.getBooleanExtra(comi2c.STATUS, false);
-            setDatathp(t,h,p,s);
-        }
-    };
-
-    public void setDatathp(double t, double h, double p, boolean s){
-        StringBuilder builder = new StringBuilder();
-        TextView txt;
-        txt= (TextView)getView().findViewById(R.id.textTemp);
-        txt.setText(String.format("%.2f", t));
-        txt= (TextView)getView().findViewById(R.id.textHum);
-        txt.setText(String.format("%.2f", h));
-        txt= (TextView)getView().findViewById(R.id.textPres);
-        txt.setText(String.format("%.2f", p));
-        txt= (TextView)getView().findViewById(R.id.textTitle);
-        if(s){
-            txt.setText("Intérieur");
-        } else {
-            txt.setText("Intérieur (sinul.)");
-        }
     }
 
     @Override
@@ -64,6 +40,11 @@ public class ResumeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_resume, container, false);
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle sevedInstanceState) {
+        openMQTT();
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -82,16 +63,14 @@ public class ResumeFragment extends Fragment {
             throw new RuntimeException(context.toString()
                     + " must implement OnFragmentInteractionListener");
         }*/
-        getActivity().registerReceiver(thpBroadcastReceiver, filter);
-        openMQTT();
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-        getActivity().unregisterReceiver(thpBroadcastReceiver);
-        mqttClient.Disconnect();
+        mqttClientOut.Disconnect();
+        mqttClientIn.Disconnect();
     }
 
     /**
@@ -111,8 +90,15 @@ public class ResumeFragment extends Fragment {
 
     private void openMQTT(){
 
-        mqttClient = new MQTTClient("Resume");
-        mqttClient.subscribeToTopic(new MQTTClient.MQTTCallback(subscriptionTopic){
+        RoomManager rm = new RoomManager(getContext());
+        rm.open();
+        mqttClientOut = new MQTTClient("Resume_out");
+        Config co = ConfigAcess.getConfig(getContext(), RoomConfigFragment.OUTDOOR_CAPTOR);
+        Room ro = rm.get( Integer.parseInt(co.getValue()) );
+        String topic = ro.getCapteur()+ "/#";
+        TextView tv = getView().findViewById(R.id.textTitleOut);
+        tv.setText(ro.getName());
+        mqttClientOut.subscribeToTopic(new MQTTClient.MQTTCallback(topic){
 
             @Override
             public void ReciveTopic(String topic, String Value){
@@ -131,7 +117,38 @@ public class ResumeFragment extends Fragment {
                 });
             }
         });
-        mqttClient.Connect(getActivity());
+        mqttClientOut.Connect(getActivity());
+
+        mqttClientIn = new MQTTClient("Resume_in");
+        co = ConfigAcess.getConfig(getContext(), RoomConfigFragment.INDOOR_CAPTOR);
+        ro = rm.get( Integer.parseInt(co.getValue()) );
+        topic = ro.getCapteur()+ "/#";
+        tv = getView().findViewById(R.id.textTitle);
+        tv.setText(ro.getName());
+        mqttClientIn.subscribeToTopic(new MQTTClient.MQTTCallback(topic){
+
+            @Override
+            public void ReciveTopic(String topic, String Value){
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        TextView txt;
+                        if(topic.contains("temperature")){
+                            txt= (TextView)getView().findViewById(R.id.textTemp);
+                            txt.setText(String.format("%.2f", new Float(Value)));
+                        }
+                        if(topic.contains("humidity")){
+                            txt= (TextView)getView().findViewById(R.id.textHum);
+                            txt.setText(String.format("%.2f", new Float(Value)));
+                        }
+                        if(topic.contains("pressure")){
+                            txt= (TextView)getView().findViewById(R.id.textPres);
+                            txt.setText(String.format("%.2f", new Float(Value)));
+                        }
+                    }
+                });
+            }
+        });
+        mqttClientIn.Connect(getActivity());
     }
 }
 

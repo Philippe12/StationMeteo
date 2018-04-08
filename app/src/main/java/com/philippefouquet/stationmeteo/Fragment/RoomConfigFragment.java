@@ -41,8 +41,8 @@ import com.philippefouquet.stationmeteo.comi2c;
 public class RoomConfigFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
 
-    private static final String INDOOR_CAPTOR = "indoorcaptor";
-    private static final String OUTDOOR_CAPTOR = "outdoorcaptor";
+    public static final String INDOOR_CAPTOR = "indoorcaptor";
+    public static final String OUTDOOR_CAPTOR = "outdoorcaptor";
 
     private OnFragmentInteractionListener mListener;
     private Room mRoom;
