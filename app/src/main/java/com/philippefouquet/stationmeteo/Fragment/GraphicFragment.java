@@ -173,10 +173,6 @@ public class GraphicFragment extends Fragment {
         graph.getViewport().setMaxX(DateEndPiker.getNextDay().getTime());
         graph.getViewport().setXAxisBoundsManual(true);
 
-        // enable scaling and scrolling
-        graph.getViewport().setScalable(true);
-        graph.getViewport().setScalableY(true);
-
         DataPoint[] tmp = new DataPoint[data_moy.size()];
         tmp = data_moy.toArray(tmp);
         LineGraphSeries<DataPoint> series_moy = new LineGraphSeries<>(tmp);
@@ -198,6 +194,13 @@ public class GraphicFragment extends Fragment {
         graph.addSeries(series_moy);
         graph.addSeries(series_min);
         graph.addSeries(series_max);
+
+        // enable scaling and scrolling
+        graph.getViewport().setScalable(true);
+        graph.getViewport().setScalableY(true);
+
+        graph.getViewport().calcCompleteRange();
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
