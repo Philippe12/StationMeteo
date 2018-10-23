@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.AppCompatImageButton;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -145,21 +146,30 @@ public class GraphicFragment extends Fragment {
                 DateStartPiker.getDate().getTime(),
                 DateEndPiker.getNextDay().getTime());
         long min = -1, max = -1;
-        if (c.moveToFirst())
-        {
+        double valmin = 10000, valmax = -10000;
+        if (c.moveToFirst()) {
             do {
-                double temp_moy = c.getDouble(c.getColumnIndex(key+THPManager.KEY_MOY));
-                double temp_min = c.getDouble(c.getColumnIndex(key+THPManager.KEY_MIN));
-                double temp_max = c.getDouble(c.getColumnIndex(key+THPManager.KEY_MAX));
+                double temp_moy = c.getDouble(c.getColumnIndex(key + THPManager.KEY_MOY));
+                double temp_min = c.getDouble(c.getColumnIndex(key + THPManager.KEY_MIN));
+                double temp_max = c.getDouble(c.getColumnIndex(key + THPManager.KEY_MAX));
                 long date = c.getLong(c.getColumnIndex(THPManager.KEY_DATE));
                 data_moy.add(new DataPoint(date, temp_moy));
                 data_min.add(new DataPoint(date, temp_min));
                 data_max.add(new DataPoint(date, temp_max));
-                if((min == -1) || (date < min)) min = date;
-                if((max == -1) || (date > max)) max = date;
+                if ((min == -1) || (date < min)) min = date;
+                if ((max == -1) || (date > max)) max = date;
+                if (valmin > temp_min) valmin = temp_min;
+                if (valmax < temp_max) valmax = temp_max;
             }
             while (c.moveToNext());
+            if (valmin == valmax) {
+                Log.i("graph", "add custom value");
+                data_moy.add(new DataPoint(max, valmax+1));
+                data_min.add(new DataPoint(max, valmax+1));
+                data_max.add(new DataPoint(max, valmax+1));
+            }
         }
+        Log.i("graph", "val : "+valmin+" "+valmax);
         c.close(); // fermeture du curseur
 
         DateFormat dt_form = new SimpleDateFormat("dd/MM/yyyy\nHH:mm");
@@ -199,7 +209,14 @@ public class GraphicFragment extends Fragment {
         graph.getViewport().setScalable(true);
         graph.getViewport().setScalableY(true);
 
-        graph.getViewport().calcCompleteRange();
+        if(valmin == valmax){
+            Log.i("graph", "set custom range");
+            graph.getViewport().setMaxY(valmin+10);
+            graph.getViewport().setMinY(valmin-10);
+        }else {
+            Log.i("graph", "set auto range");
+            graph.getViewport().calcCompleteRange();
+        }
 
     }
 
