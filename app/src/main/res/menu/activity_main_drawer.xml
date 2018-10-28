@@ -15,10 +15,10 @@
         <menu>
             <item
                 android:id="@+id/affect"
-                android:icon="@drawable/ic_menu_manage"
-                android:title="Affectation des capteurs"
                 android:checkable="true"
-                android:checked="false"/>
+                android:checked="false"
+                android:icon="@drawable/ic_menu_manage"
+                android:title="Liste des capteurs" />
             <item
                 android:id="@+id/room"
                 android:icon="@drawable/ic_menu_manage"

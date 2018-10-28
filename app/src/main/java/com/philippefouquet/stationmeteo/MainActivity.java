@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity
             title  = "Général";
         } else if (id == R.id.affect) {
             fragment = new CapteurFragment();
-            title  = "Affectation des capteurs";
+            title  = "Liste des capteurs";
         } else if (id == R.id.room) {
             fragment = new RoomFragment();
             title  = "Définition des piéces";

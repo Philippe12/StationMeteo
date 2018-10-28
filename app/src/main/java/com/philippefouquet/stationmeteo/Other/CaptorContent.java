@@ -14,6 +14,7 @@ public class CaptorContent {
     private CaptorContentRefrech mListen;
 
     public List<CaptorItem> ITEMS = new ArrayList<CaptorItem>();
+    private List<MQTTClient> ListMQTT = new ArrayList<MQTTClient>();
 
     public static abstract class CaptorContentRefrech{
         public abstract void onCaptorContentRefrech();
@@ -30,6 +31,9 @@ public class CaptorContent {
 
     public void Close(){
         mqttClient.Disconnect();
+        for( int id = 0; id < ListMQTT.size(); id++){
+            ListMQTT.get(id).Disconnect();
+        }
     }
 
     public int Find(String captorItem){
@@ -56,6 +60,7 @@ public class CaptorContent {
                 int pos = ITEMS.indexOf(cap);
                 if( pos < 0 ) {
                     ITEMS.add(cap);
+                    NewMQTT(activity, ITEMS.get(ITEMS.indexOf(cap)));
                 }else{
                     ITEMS.get(pos).SetCpt(new Integer(Value));
                 }
@@ -64,5 +69,29 @@ public class CaptorContent {
             }
         });
         mqttClient.Connect(activity);
+    }
+
+    private void NewMQTT(Activity activity, CaptorItem it){
+        String cap = it.getId();
+        MQTTClient cl = new MQTTClient("ListCapteur_"+cap);
+        cl.subscribeToTopic(new MQTTClient.MQTTCallback(cap + "/#"){
+            CaptorItem item = it;
+
+            @Override
+            public void ReciveTopic(String topic, String Value){
+                if(topic.contains("temperature")){
+                    item.setTemp(new Double(Value));
+                }
+                if(topic.contains("humidity")){
+                    item.setHum(new Double(Value));
+                }
+                if(topic.contains("pressure")){
+                    item.setPres(new Double(Value));
+                }
+                mListen.onCaptorContentRefrech();
+            }
+        });
+        cl.Connect(activity);
+        ListMQTT.add(cl);
     }
 }

@@ -49,6 +49,9 @@ public class MyCapteurRecyclerViewAdapter extends RecyclerView.Adapter<MyCapteur
         }else{
             holder.mImageSatus.setImageResource(android.R.drawable.presence_offline);
         }
+        holder.mTemp.setText(String.format("%.2f", mValues.get(position).getTemp()));
+        holder.mHum.setText(String.format("%.2f", mValues.get(position).getHum()));
+        holder.mPres.setText(String.format("%.2f", mValues.get(position).getPres()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,6 +74,9 @@ public class MyCapteurRecyclerViewAdapter extends RecyclerView.Adapter<MyCapteur
         public final View mView;
         public final TextView mCapteurId;
         public final ImageView mImageSatus;
+        public final TextView mTemp;
+        public final TextView mHum;
+        public final TextView mPres;
         public CaptorItem mItem;
 
         public ViewHolder(View view) {
@@ -78,6 +84,9 @@ public class MyCapteurRecyclerViewAdapter extends RecyclerView.Adapter<MyCapteur
             mView = view;
             mCapteurId = (TextView) view.findViewById(R.id.capteurId);
             mImageSatus = (ImageView) view.findViewById(R.id.imageStatus);
+            mTemp = (TextView) view.findViewById(R.id.temp);
+            mHum = (TextView) view.findViewById(R.id.hum);
+            mPres = (TextView) view.findViewById(R.id.pres);
         }
 
         @Override

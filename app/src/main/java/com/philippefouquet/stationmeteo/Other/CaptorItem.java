@@ -12,6 +12,33 @@ public class CaptorItem {
     private String Id = "";
     private Boolean Status = false;
     private String Name = "";
+    private double Temp = 0;
+    private double Hum = 0;
+    private double Pres = 0;
+
+    public double getTemp() {
+        return Temp;
+    }
+
+    public double getHum() {
+        return Hum;
+    }
+
+    public double getPres() {
+        return Pres;
+    }
+
+    public void setTemp(double temp) {
+        Temp = temp;
+    }
+
+    public void setHum(double hum) {
+        Hum = hum;
+    }
+
+    public void setPres(double pres) {
+        Pres = pres;
+    }
 
     public String getId() {
         return Id;
